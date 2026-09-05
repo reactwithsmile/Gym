@@ -1,0 +1,6 @@
+@GymApi_HostAddress = http://localhost:5182
+
+GET {{GymApi_HostAddress}}/api/health
+Accept: application/json
+
+###
