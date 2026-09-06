@@ -1,4 +1,5 @@
 using System.Text;
+using System.Linq;
 using GymApi.Auth;
 using GymApi.Data;
 using GymApi.Models;
@@ -61,7 +62,17 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    await db.Database.MigrateAsync();
+    // If the project contains EF migrations, apply them. Otherwise ensure the database is created from the model.
+    var migrations = db.Database.GetMigrations();
+    if (migrations != null && migrations.Any())
+    {
+        await db.Database.MigrateAsync();
+    }
+    else
+    {
+        await db.Database.EnsureCreatedAsync();
+    }
+
     await DbSeeder.SeedAsync(scope.ServiceProvider);
 }
 

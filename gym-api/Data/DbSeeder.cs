@@ -17,6 +17,7 @@ public static class DbSeeder
         await SeedPermissionsAsync(db, cancellationToken);
         await SeedRolePermissionsAsync(db, cancellationToken);
         await SeedAdminUserAsync(db, passwordHasher, config, cancellationToken);
+        await SeedTrainerUserAsync(db, passwordHasher, config, cancellationToken);
     }
 
     private static async Task SeedRolesAsync(AppDbContext db, CancellationToken cancellationToken)
@@ -37,16 +38,50 @@ public static class DbSeeder
         var names = new Dictionary<string, string>
         {
             [PermissionCodes.DashboardView] = "View dashboard",
-            [PermissionCodes.HeroManage] = "Manage hero",
-            [PermissionCodes.AboutManage] = "Manage about",
-            [PermissionCodes.ServicesManage] = "Manage services",
-            [PermissionCodes.TrainersManage] = "Manage trainers",
-            [PermissionCodes.MembershipManage] = "Manage membership plans",
-            [PermissionCodes.GalleryManage] = "Manage gallery",
-            [PermissionCodes.TestimonialsManage] = "Manage testimonials",
-            [PermissionCodes.ContactManage] = "Manage contact",
-            [PermissionCodes.SettingsManage] = "Manage settings",
-            [PermissionCodes.RolesManage] = "Manage roles and permissions"
+
+            [PermissionCodes.HeroView] = "View hero",
+            [PermissionCodes.HeroCreate] = "Create hero",
+            [PermissionCodes.HeroEdit] = "Edit hero",
+            [PermissionCodes.HeroDelete] = "Delete hero",
+
+            [PermissionCodes.AboutView] = "View about",
+            [PermissionCodes.AboutCreate] = "Create about",
+            [PermissionCodes.AboutEdit] = "Edit about",
+            [PermissionCodes.AboutDelete] = "Delete about",
+
+            [PermissionCodes.ServicesView] = "View services",
+            [PermissionCodes.ServicesCreate] = "Create services",
+            [PermissionCodes.ServicesEdit] = "Edit services",
+            [PermissionCodes.ServicesDelete] = "Delete services",
+
+            [PermissionCodes.TrainersView] = "View trainers",
+            [PermissionCodes.TrainersCreate] = "Create trainers",
+            [PermissionCodes.TrainersEdit] = "Edit trainers",
+            [PermissionCodes.TrainersDelete] = "Delete trainers",
+
+            [PermissionCodes.MembershipView] = "View membership plans",
+            [PermissionCodes.MembershipCreate] = "Create membership plans",
+            [PermissionCodes.MembershipEdit] = "Edit membership plans",
+            [PermissionCodes.MembershipDelete] = "Delete membership plans",
+
+            [PermissionCodes.GalleryView] = "View gallery",
+            [PermissionCodes.GalleryCreate] = "Create gallery",
+            [PermissionCodes.GalleryEdit] = "Edit gallery",
+            [PermissionCodes.GalleryDelete] = "Delete gallery",
+
+            [PermissionCodes.TestimonialsView] = "View testimonials",
+            [PermissionCodes.TestimonialsCreate] = "Create testimonials",
+            [PermissionCodes.TestimonialsEdit] = "Edit testimonials",
+            [PermissionCodes.TestimonialsDelete] = "Delete testimonials",
+
+            [PermissionCodes.ContactView] = "View contact",
+            [PermissionCodes.ContactEdit] = "Edit contact",
+
+            [PermissionCodes.SettingsView] = "View settings",
+            [PermissionCodes.SettingsEdit] = "Edit settings",
+
+            [PermissionCodes.RolesView] = "View roles and permissions",
+            [PermissionCodes.RolesEdit] = "Edit roles and permissions"
         };
 
         foreach (var (code, name) in names)
@@ -113,6 +148,32 @@ public static class DbSeeder
             IsActive = true
         };
         user.PasswordHash = passwordHasher.HashPassword(user, config["Seed:AdminPassword"] ?? "Admin123!");
+        db.Users.Add(user);
+        await db.SaveChangesAsync(cancellationToken);
+    }
+
+    private static async Task SeedTrainerUserAsync(
+        AppDbContext db,
+        IPasswordHasher<User> passwordHasher,
+        IConfiguration config,
+        CancellationToken cancellationToken)
+    {
+        var email = config["Seed:TrainerEmail"] ?? "trainer@gym.local";
+        if (await db.Users.AnyAsync(u => u.Email == email, cancellationToken))
+        {
+            return;
+        }
+
+        var trainerRole = await db.Roles.FirstAsync(r => r.Name == RoleNames.Trainer, cancellationToken);
+        var user = new User
+        {
+            Email = email,
+            RoleId = trainerRole.Id,
+            IsActive = true
+        };
+
+        user.PasswordHash = passwordHasher.HashPassword(user, config["Seed:TrainerPassword"] ?? "Trainer123!");
+
         db.Users.Add(user);
         await db.SaveChangesAsync(cancellationToken);
     }

@@ -4,7 +4,7 @@ import { Permission } from "../types/auth";
 
 const navItems = [
   { to: "/", label: "Dashboard", permission: Permission.DashboardView },
-  { to: "/hero", label: "Hero", permission: Permission.HeroManage },
+  { to: "/hero", label: "Hero", permission: Permission.HeroView },
   { to: "/about", label: "About", permission: Permission.AboutManage },
   { to: "/services", label: "Services", permission: Permission.ServicesManage },
   { to: "/trainers", label: "Trainers", permission: Permission.TrainersManage },

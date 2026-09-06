@@ -23,8 +23,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    apiFetch<AuthUser>("/api/auth/me")
-      .then(setUser)
+    apiFetch("/api/auth/me")
+      .then((u) => setUser(u as unknown as AuthUser))
       .catch(() => {
         clearToken();
         setUser(null);
@@ -37,10 +37,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       user,
       isReady,
       login: async (email, password) => {
-        const result = await apiFetch<LoginResponse>("/api/auth/login", {
+        const result = (await apiFetch("/api/auth/login", {
           method: "POST",
           body: JSON.stringify({ email, password }),
-        });
+        })) as unknown as LoginResponse;
         setToken(result.token);
         setUser(result.user);
       },
