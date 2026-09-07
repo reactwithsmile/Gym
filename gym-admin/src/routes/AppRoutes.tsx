@@ -13,6 +13,7 @@ import { ServicesPage } from "../pages/Services/ServicesPage";
 import { SettingsPage } from "../pages/Settings/SettingsPage";
 import { TestimonialsPage } from "../pages/Testimonials/TestimonialsPage";
 import { TrainersPage } from "../pages/Trainers/TrainersPage";
+import { UsersPage } from "../pages/Users/UsersPage";
 
 export function AppRoutes() {
   return (
@@ -31,6 +32,7 @@ export function AppRoutes() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/roles" element={<RolesPage />} />
+          <Route path="/users" element={<UsersPage />} />
         </Route>
       </Route>
     </Routes>

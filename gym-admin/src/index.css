@@ -443,6 +443,17 @@ a {
   font-size: 12px;
 }
 
+.settings-logo-preview {
+  display: block;
+  width: 120px;
+  height: 72px;
+  margin-top: 12px;
+  object-fit: contain;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #111;
+}
+
 .roles-header {
  display: flex;
  flex-direction: column;

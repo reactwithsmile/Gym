@@ -1,5 +1,10 @@
-import { PlaceholderPage } from "../../components/PlaceholderPage";
+import { useEffect, useState } from "react";
 
+type Contact = { gymName: string; address: string; phone: string; email: string; openingHours: string; googleMapsUrl: string; instagramUrl: string; facebookUrl: string; whatsAppNumber: string; description: string };
+const apiUrl = import.meta.env.VITE_API_URL ?? "http://localhost:5182";
 export function ContactPage() {
-  return <PlaceholderPage title="Contact" />;
+  const [contact, setContact] = useState<Contact | null>(null);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => { fetch(`${apiUrl}/api/contact`).then(async (response) => { if (!response.ok) throw new Error(); return await response.json() as Contact; }).then(setContact).catch(() => setContact(null)).finally(() => setLoading(false)); }, []);
+  return <main className="contact-page"><section className="contact-section contact-route-section"><div className="contact-heading"><span className="eyebrow">Get in touch</span><h1>Let's get<br />you moving.</h1>{contact?.description ? <p>{contact.description}</p> : null}</div>{loading ? <p className="contact-empty">Loading contact information…</p> : contact ? <div className="contact-layout"><div className="contact-details">{contact.gymName ? <div><small>Gym</small><strong>{contact.gymName}</strong></div> : null}{contact.address ? <div><small>Address</small><strong>{contact.address}</strong></div> : null}{contact.phone ? <div><small>Phone</small><a href={`tel:${contact.phone}`}>{contact.phone}</a></div> : null}{contact.email ? <div><small>Email</small><a href={`mailto:${contact.email}`}>{contact.email}</a></div> : null}{contact.openingHours ? <div><small>Opening Hours</small><strong>{contact.openingHours}</strong></div> : null}</div><div className="contact-actions">{contact.googleMapsUrl ? <a className="contact-button contact-button-primary" href={contact.googleMapsUrl} target="_blank" rel="noreferrer">Get directions <span>↗</span></a> : null}{contact.whatsAppNumber ? <a className="contact-button" href={`https://wa.me/${contact.whatsAppNumber.replace(/\D/g, "")}`}>WhatsApp <span>↗</span></a> : null}</div></div> : <p className="contact-empty">Contact information is coming soon.</p>}</section></main>;
 }

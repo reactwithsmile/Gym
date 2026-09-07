@@ -82,6 +82,10 @@ public static class DbSeeder
 
             [PermissionCodes.RolesView] = "View roles and permissions",
             [PermissionCodes.RolesEdit] = "Edit roles and permissions"
+            ,[PermissionCodes.UsersView] = "View users"
+            ,[PermissionCodes.UsersCreate] = "Create users"
+            ,[PermissionCodes.UsersEdit] = "Edit users"
+            ,[PermissionCodes.UsersDelete] = "Delete users"
         };
 
         foreach (var (code, name) in names)
@@ -143,6 +147,7 @@ public static class DbSeeder
         var adminRole = await db.Roles.FirstAsync(r => r.Name == RoleNames.Admin, cancellationToken);
         var user = new User
         {
+            Name = "Administrator",
             Email = email,
             RoleId = adminRole.Id,
             IsActive = true
@@ -167,6 +172,7 @@ public static class DbSeeder
         var trainerRole = await db.Roles.FirstAsync(r => r.Name == RoleNames.Trainer, cancellationToken);
         var user = new User
         {
+            Name = "Trainer",
             Email = email,
             RoleId = trainerRole.Id,
             IsActive = true

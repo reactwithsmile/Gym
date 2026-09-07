@@ -13,6 +13,7 @@ const navItems = [
   { to: "/testimonials", label: "Testimonials", permission: Permission.TestimonialsManage },
   { to: "/contact", label: "Contact", permission: Permission.ContactManage },
   { to: "/settings", label: "Settings", permission: Permission.SettingsManage },
+  { to: "/users", label: "Users", permission: Permission.UsersView },
   { to: "/roles", label: "Roles & Permissions", permission: Permission.RolesManage },
 ];
 

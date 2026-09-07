@@ -47,6 +47,10 @@ public static class PermissionCodes
 
     public const string RolesView = "roles.view";
     public const string RolesEdit = "roles.edit";
+    public const string UsersView = "users.view";
+    public const string UsersCreate = "users.create";
+    public const string UsersEdit = "users.edit";
+    public const string UsersDelete = "users.delete";
 
     public static readonly string[] All =
     [
@@ -60,7 +64,8 @@ public static class PermissionCodes
         TestimonialsView, TestimonialsCreate, TestimonialsEdit, TestimonialsDelete,
         ContactView, ContactEdit,
         SettingsView, SettingsEdit,
-        RolesView, RolesEdit
+        RolesView, RolesEdit,
+        UsersView, UsersCreate, UsersEdit, UsersDelete
     ];
 }
 
