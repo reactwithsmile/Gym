@@ -22,6 +22,11 @@ public class AppDbContext : DbContext
     public DbSet<Testimonial> Testimonials => Set<Testimonial>();
     public DbSet<Contact> Contacts => Set<Contact>();
     public DbSet<GymSettings> GymSettings => Set<GymSettings>();
+    public DbSet<Member> Members => Set<Member>();
+    public DbSet<Membership> Memberships => Set<Membership>();
+    public DbSet<Payment> Payments => Set<Payment>();
+    public DbSet<Notification> Notifications => Set<Notification>();
+    public DbSet<Enquiry> Enquiries => Set<Enquiry>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -155,6 +160,47 @@ public class AppDbContext : DbContext
             entity.Property(item => item.Tagline).HasMaxLength(300);
             entity.Property(item => item.WebsiteUrl).HasMaxLength(1000);
             entity.Property(item => item.Currency).HasMaxLength(10).IsRequired();
+        });
+
+        modelBuilder.Entity<Payment>(entity =>
+        {
+            entity.Property(item => item.Amount).HasPrecision(18, 2);
+            entity.Property(item => item.Method).HasMaxLength(50).IsRequired();
+            entity.Property(item => item.Reference).HasMaxLength(200);
+            entity.Property(item => item.Status).HasMaxLength(32).IsRequired();
+            entity.Property(item => item.Notes).HasMaxLength(1000);
+            entity.HasOne(item => item.CreatedByUser).WithMany().HasForeignKey(item => item.CreatedByUserId).OnDelete(DeleteBehavior.SetNull);
+        });
+
+        modelBuilder.Entity<Member>(entity =>
+        {
+            entity.Property(x => x.Name).HasMaxLength(200).IsRequired();
+            entity.Property(x => x.Email).HasMaxLength(256).IsRequired();
+            entity.Property(x => x.Phone).HasMaxLength(50);
+            entity.HasIndex(x => x.Email);
+        });
+        modelBuilder.Entity<Membership>(entity =>
+        {
+            entity.Property(x => x.Status).HasMaxLength(32).IsRequired();
+            entity.HasOne(x => x.Member).WithMany(x => x.Memberships).HasForeignKey(x => x.MemberId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne(x => x.MembershipPlan).WithMany().HasForeignKey(x => x.MembershipPlanId).OnDelete(DeleteBehavior.SetNull);
+            entity.HasIndex(x => new { x.EndDate, x.Status });
+        });
+        modelBuilder.Entity<Payment>(entity =>
+        {
+            entity.Property(x => x.Amount).HasPrecision(18, 2);
+            entity.Property(x => x.Method).HasMaxLength(50).IsRequired();
+            entity.Property(x => x.Reference).HasMaxLength(200);
+            entity.HasOne(x => x.Member).WithMany(x => x.Payments).HasForeignKey(x => x.MemberId).OnDelete(DeleteBehavior.Restrict);
+            entity.HasOne(x => x.Membership).WithMany(x => x.Payments).HasForeignKey(x => x.MembershipId).OnDelete(DeleteBehavior.SetNull);
+        });
+        modelBuilder.Entity<Notification>(entity =>
+        {
+            entity.Property(x => x.Title).HasMaxLength(200).IsRequired();
+            entity.Property(x => x.Message).HasMaxLength(2000).IsRequired();
+            entity.Property(x => x.Type).HasMaxLength(50).IsRequired();
+            entity.Property(x => x.DeduplicationKey).HasMaxLength(300);
+            entity.HasIndex(x => x.DeduplicationKey).IsUnique().HasFilter("[DeduplicationKey] IS NOT NULL");
         });
     }
 }

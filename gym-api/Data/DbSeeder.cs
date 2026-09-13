@@ -86,6 +86,16 @@ public static class DbSeeder
             ,[PermissionCodes.UsersCreate] = "Create users"
             ,[PermissionCodes.UsersEdit] = "Edit users"
             ,[PermissionCodes.UsersDelete] = "Delete users"
+            ,[PermissionCodes.MembersView] = "View members"
+            ,[PermissionCodes.MembersCreate] = "Create members"
+            ,[PermissionCodes.MembersEdit] = "Edit members"
+            ,[PermissionCodes.FeesView] = "View fees"
+            ,[PermissionCodes.FeesCreate] = "Create fees"
+            ,[PermissionCodes.FeesEdit] = "Edit fees"
+            ,[PermissionCodes.NotificationsView] = "View notifications"
+            ,[PermissionCodes.NotificationsEdit] = "Edit notifications"
+            ,[PermissionCodes.EnquiriesView] = "View enquiries"
+            ,[PermissionCodes.EnquiriesEdit] = "Edit enquiries"
         };
 
         foreach (var (code, name) in names)

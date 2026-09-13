@@ -1,9 +1,13 @@
 using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using GymApi.Data;
 
 #nullable disable
 
 namespace GymApi.Data.Migrations;
 
+[DbContext(typeof(AppDbContext))]
+[Migration("20260907002000_RepairTestimonialsTable")]
 public partial class RepairTestimonialsTable : Migration
 {
     protected override void Up(MigrationBuilder migrationBuilder)

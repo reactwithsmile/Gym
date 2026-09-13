@@ -51,6 +51,16 @@ public static class PermissionCodes
     public const string UsersCreate = "users.create";
     public const string UsersEdit = "users.edit";
     public const string UsersDelete = "users.delete";
+    public const string MembersView = "members.view";
+    public const string MembersCreate = "members.create";
+    public const string MembersEdit = "members.edit";
+    public const string FeesView = "fees.view";
+    public const string FeesCreate = "fees.create";
+    public const string FeesEdit = "fees.edit";
+    public const string NotificationsView = "notifications.view";
+    public const string NotificationsEdit = "notifications.edit";
+    public const string EnquiriesView = "enquiries.view";
+    public const string EnquiriesEdit = "enquiries.edit";
 
     public static readonly string[] All =
     [
@@ -65,7 +75,10 @@ public static class PermissionCodes
         ContactView, ContactEdit,
         SettingsView, SettingsEdit,
         RolesView, RolesEdit,
-        UsersView, UsersCreate, UsersEdit, UsersDelete
+        UsersView, UsersCreate, UsersEdit, UsersDelete,
+        MembersView, MembersCreate, MembersEdit,
+        FeesView, FeesCreate, FeesEdit,
+        NotificationsView, NotificationsEdit
     ];
 }
 

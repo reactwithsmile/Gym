@@ -1,6 +1,7 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import { Permission } from "../types/auth";
+import { NotificationsBell } from "../components/NotificationsBell";
 
 const navItems = [
   { to: "/", label: "Dashboard", permission: Permission.DashboardView },
@@ -14,6 +15,8 @@ const navItems = [
   { to: "/contact", label: "Contact", permission: Permission.ContactManage },
   { to: "/settings", label: "Settings", permission: Permission.SettingsManage },
   { to: "/users", label: "Users", permission: Permission.UsersView },
+  { to: "/fees", label: "Fees & Payments", permission: Permission.FeesView },
+  { to: "/enquiries", label: "Enquiries", permission: Permission.EnquiriesView },
   { to: "/roles", label: "Roles & Permissions", permission: Permission.RolesManage },
 ];
 
@@ -38,14 +41,19 @@ export function AdminLayout() {
             </NavLink>
           ))}
         </nav>
-        <div className="admin-user">
-          <p>{user?.email}</p>
-          <button className="btn-link" type="button" onClick={onLogout}>
-            Log out
-          </button>
-        </div>
       </aside>
       <div className="admin-content">
+        <header className="admin-topbar">
+          <div>
+            <span className="topbar-kicker">GYM MANAGEMENT</span>
+            <strong>Admin workspace</strong>
+          </div>
+          <div className="topbar-actions">
+            <NotificationsBell />
+            <span className="topbar-user">{user?.email}</span>
+            <button className="btn-link" type="button" onClick={onLogout}>Log out</button>
+          </div>
+        </header>
         <Outlet />
       </div>
     </div>
