@@ -1,27 +1,31 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { useAuth } from "../auth/AuthContext";
 import { Permission } from "../types/auth";
 import { NotificationsBell } from "../components/NotificationsBell";
 
 const navItems = [
-  { to: "/", label: "Dashboard", permission: Permission.DashboardView },
-  { to: "/hero", label: "Hero", permission: Permission.HeroView },
-  { to: "/about", label: "About", permission: Permission.AboutManage },
-  { to: "/services", label: "Services", permission: Permission.ServicesManage },
-  { to: "/trainers", label: "Trainers", permission: Permission.TrainersManage },
-  { to: "/membership-plans", label: "Membership Plans", permission: Permission.MembershipManage },
-  { to: "/gallery", label: "Gallery", permission: Permission.GalleryManage },
-  { to: "/testimonials", label: "Testimonials", permission: Permission.TestimonialsManage },
-  { to: "/contact", label: "Contact", permission: Permission.ContactManage },
-  { to: "/settings", label: "Settings", permission: Permission.SettingsManage },
-  { to: "/users", label: "Users", permission: Permission.UsersView },
-  { to: "/fees", label: "Fees & Payments", permission: Permission.FeesView },
-  { to: "/enquiries", label: "Enquiries", permission: Permission.EnquiriesView },
-  { to: "/roles", label: "Roles & Permissions", permission: Permission.RolesManage },
+  { to: "/", label: "Dashboard", group: "Overview", permission: Permission.DashboardView },
+  { to: "/members", label: "Members", group: "Gym operations", permission: Permission.MembersView },
+  { to: "/fees", label: "Payments & Fees", group: "Gym operations", permission: Permission.FeesView },
+  { to: "/enquiries", label: "Enquiries", group: "Gym operations", permission: Permission.EnquiriesView },
+  { to: "/membership-plans", label: "Membership Plans", group: "Gym operations", permission: Permission.MembershipManage },
+  { to: "/products", label: "Products", group: "Gym operations", permission: Permission.ProductsView },
+  { to: "/hero", label: "Hero", group: "Website content", permission: Permission.HeroView },
+  { to: "/about", label: "About", group: "Website content", permission: Permission.AboutManage },
+  { to: "/services", label: "Services", group: "Website content", permission: Permission.ServicesManage },
+  { to: "/trainers", label: "Trainers", group: "Website content", permission: Permission.TrainersManage },
+  { to: "/gallery", label: "Gallery", group: "Website content", permission: Permission.GalleryManage },
+  { to: "/testimonials", label: "Testimonials", group: "Website content", permission: Permission.TestimonialsManage },
+  { to: "/contact", label: "Contact", group: "Website content", permission: Permission.ContactManage },
+  { to: "/settings", label: "Settings", group: "Administration", permission: Permission.SettingsManage },
+  { to: "/users", label: "Users", group: "Administration", permission: Permission.UsersView },
+  { to: "/roles", label: "Roles & Permissions", group: "Administration", permission: Permission.RolesManage },
 ];
 
 export function AdminLayout() {
   const { hasPermission, logout, user } = useAuth();
+  const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const items = navItems.filter((item) => hasPermission(item.permission));
 
@@ -31,14 +35,15 @@ export function AdminLayout() {
   }
 
   return (
-    <div className="admin-shell">
+    <div className={`admin-shell${collapsed ? " sidebar-collapsed" : ""}`}>
       <aside className="admin-nav">
-        <p className="brand">Gym Admin</p>
+        <div className="brand-row"><p className="brand">Gym Admin</p><button className="sidebar-toggle" type="button" onClick={() => setCollapsed((value) => !value)} aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}>{collapsed ? "»" : "«"}</button></div>
         <nav>
-          {items.map((item) => (
-            <NavLink key={item.to} to={item.to} end={item.to === "/"}>
-              {item.label}
-            </NavLink>
+          {items.map((item, index) => (
+            <div key={item.to}>
+              {(index === 0 || item.group !== items[index - 1].group) ? <p className="nav-group-label">{item.group}</p> : null}
+              <NavLink to={item.to} end={item.to === "/"} data-short={item.label.charAt(0)}>{item.label}</NavLink>
+            </div>
           ))}
         </nav>
       </aside>

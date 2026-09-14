@@ -96,6 +96,10 @@ public static class DbSeeder
             ,[PermissionCodes.NotificationsEdit] = "Edit notifications"
             ,[PermissionCodes.EnquiriesView] = "View enquiries"
             ,[PermissionCodes.EnquiriesEdit] = "Edit enquiries"
+            ,[PermissionCodes.ProductsView] = "View products"
+            ,[PermissionCodes.ProductsCreate] = "Create products"
+            ,[PermissionCodes.ProductsEdit] = "Edit products"
+            ,[PermissionCodes.ProductsDelete] = "Delete products"
         };
 
         foreach (var (code, name) in names)

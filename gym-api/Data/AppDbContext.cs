@@ -27,6 +27,7 @@ public class AppDbContext : DbContext
     public DbSet<Payment> Payments => Set<Payment>();
     public DbSet<Notification> Notifications => Set<Notification>();
     public DbSet<Enquiry> Enquiries => Set<Enquiry>();
+    public DbSet<Product> Products => Set<Product>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -40,6 +41,28 @@ public class AppDbContext : DbContext
                 .WithMany(r => r.Users)
                 .HasForeignKey(u => u.RoleId)
                 .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<Member>(entity =>
+        {
+            entity.HasOne(member => member.CreatedByUser)
+                .WithMany()
+                .HasForeignKey(member => member.CreatedByUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+            entity.HasOne(member => member.UpdatedByUser)
+                .WithMany()
+                .HasForeignKey(member => member.UpdatedByUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<Product>(entity =>
+        {
+            entity.Property(product => product.Name).HasMaxLength(200).IsRequired();
+            entity.Property(product => product.Category).HasMaxLength(100).IsRequired();
+            entity.Property(product => product.Description).HasMaxLength(2000);
+            entity.Property(product => product.ImageUrl).HasColumnType("nvarchar(max)");
+            entity.Property(product => product.Price).HasPrecision(18, 2);
+            entity.HasIndex(product => new { product.IsActive, product.DisplayOrder });
         });
 
         modelBuilder.Entity<Role>(entity =>

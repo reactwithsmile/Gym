@@ -4,6 +4,7 @@ using GymApi.DTOs;
 using GymApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace GymApi.Controllers;
 
@@ -25,6 +26,8 @@ public class MembersController(AppDbContext db) : ControllerBase
                 x.IsActive,
                 x.CreatedAt,
                 x.UpdatedAt,
+                CreatedBy = x.CreatedByUser == null ? null : new { x.CreatedByUser.Name, Role = x.CreatedByUser.Role.Name },
+                UpdatedBy = x.UpdatedByUser == null ? null : new { x.UpdatedByUser.Name, Role = x.UpdatedByUser.Role.Name },
                 Memberships = x.Memberships.Select(m => new
                 {
                     m.Id,
@@ -55,6 +58,8 @@ public class MembersController(AppDbContext db) : ControllerBase
                 x.IsActive,
                 x.CreatedAt,
                 x.UpdatedAt,
+                CreatedBy = x.CreatedByUser == null ? null : new { x.CreatedByUser.Name, Role = x.CreatedByUser.Role.Name },
+                UpdatedBy = x.UpdatedByUser == null ? null : new { x.UpdatedByUser.Name, Role = x.UpdatedByUser.Role.Name },
                 Memberships = x.Memberships.Select(m => new
                 {
                     m.Id,
@@ -80,7 +85,8 @@ public class MembersController(AppDbContext db) : ControllerBase
     {
         if (string.IsNullOrWhiteSpace(request.Name) || string.IsNullOrWhiteSpace(request.Email))
             return BadRequest(new { message = "Name and email are required." });
-        var member = new Member { Name = request.Name.Trim(), Email = request.Email.Trim(), Phone = request.Phone?.Trim() ?? "", IsActive = request.IsActive };
+        var userId = CurrentUserId();
+        var member = new Member { Name = request.Name.Trim(), Email = request.Email.Trim(), Phone = request.Phone?.Trim() ?? "", IsActive = request.IsActive, CreatedByUserId = userId, UpdatedByUserId = userId };
         db.Members.Add(member); await db.SaveChangesAsync(ct);
         return CreatedAtAction(nameof(Get), new { id = member.Id }, member);
     }
@@ -92,6 +98,7 @@ public class MembersController(AppDbContext db) : ControllerBase
         var member = await db.Members.FindAsync([id], ct);
         if (member is null) return NotFound();
         member.Name = request.Name.Trim(); member.Email = request.Email.Trim(); member.Phone = request.Phone?.Trim() ?? ""; member.IsActive = request.IsActive; member.UpdatedAt = DateTime.UtcNow;
+        member.UpdatedByUserId = CurrentUserId();
         await db.SaveChangesAsync(ct); return Ok(member);
     }
 
@@ -110,4 +117,7 @@ public class MembersController(AppDbContext db) : ControllerBase
         db.Memberships.Add(membership); await db.SaveChangesAsync(ct);
         return Ok(membership);
     }
+
+    private int? CurrentUserId() =>
+        int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var userId) ? userId : null;
 }

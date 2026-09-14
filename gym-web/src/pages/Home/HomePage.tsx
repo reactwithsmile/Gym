@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import heroFallbackImage from "../../assets/hero.png";
 
 type HeroContent = {
@@ -83,6 +83,7 @@ export function HomePage() {
   const [gallery, setGallery] = useState<GalleryItem[]>([]);
   const [contact, setContact] = useState<ContactContent | null>(null);
   const [currency, setCurrency] = useState("INR");
+  const [heroPointer, setHeroPointer] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     let isCurrent = true;
@@ -232,9 +233,11 @@ export function HomePage() {
 
   return (
     <main className="home-page">
-      <section className="hero-section" aria-labelledby="hero-heading" style={{ backgroundImage: `url("${hero.imageUrl || heroFallbackImage}")` }}>
+      <section className="hero-section" aria-labelledby="hero-heading" style={{ "--hero-x": `${heroPointer.x}px`, "--hero-y": `${heroPointer.y}px` } as CSSProperties} onMouseMove={(event) => { const rect = event.currentTarget.getBoundingClientRect(); setHeroPointer({ x: (event.clientX - rect.left - rect.width / 2) * .018, y: (event.clientY - rect.top - rect.height / 2) * .012 }); }} onMouseLeave={() => setHeroPointer({ x: 0, y: 0 })}>
+        <div className="hero-background-layer" aria-hidden="true" />
         <div className="hero-backdrop" />
         <div className="hero-grid" />
+        <div className="hero-atmosphere" aria-hidden="true" />
         <div className="hero-content">
           <span className="eyebrow">Train <i>•</i> Build <i>•</i> Transform</span>
           <h1 id="hero-heading">{hero.heading}</h1>
@@ -267,13 +270,21 @@ export function HomePage() {
         </div>
         <div className="hero-scroll"><span>Scroll</span><i /></div>
       </section>
+      <AboutSection about={about} />
       <ServicesSection services={services} />
       <TrainersSection trainers={trainers} />
       <MembershipSection plans={plans} currency={currency} />
       <TestimonialsSection testimonials={testimonials} />
       <GallerySection items={gallery} />
+      <ContactSection contact={contact} />
     </main>
   );
+}
+
+function AboutSection({ about }: { about: AboutContent | null }) {
+  return <section className="about-section" aria-labelledby="about-heading">
+    {about ? <><div className="about-visual">{about.imageUrl ? <img src={about.imageUrl} alt={about.title} loading="lazy" /> : <div className="about-image-placeholder" />}<span className="about-line" /></div><div className="about-copy"><span className="eyebrow">{about.subtitle}</span><h2 id="about-heading">{about.title}</h2><p>{about.description}</p><div className="about-stats"><div><strong>{about.experienceYears}<small>+</small></strong><span>Years Experience</span></div><div><strong>{about.membersCount}<small>+</small></strong><span>Happy Members</span></div><div><strong>{about.trainersCount}<small>+</small></strong><span>Expert Trainers</span></div></div></div></> : <p className="about-empty">Our story is coming soon.</p>}
+  </section>;
 }
 
 function ServicesSection({ services }: { services: ServiceContent[] }) {

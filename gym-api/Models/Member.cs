@@ -9,6 +9,10 @@ public class Member
     public bool IsActive { get; set; } = true;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    public int? CreatedByUserId { get; set; }
+    public int? UpdatedByUserId { get; set; }
+    public User? CreatedByUser { get; set; }
+    public User? UpdatedByUser { get; set; }
     public ICollection<Membership> Memberships { get; set; } = [];
     public ICollection<Payment> Payments { get; set; } = [];
 }

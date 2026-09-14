@@ -8,6 +8,7 @@ import { MembershipPage } from "../pages/Membership/MembershipPage";
 import { ServicesPage } from "../pages/Services/ServicesPage";
 import { TestimonialsPage } from "../pages/Testimonials/TestimonialsPage";
 import { TrainersPage } from "../pages/Trainers/TrainersPage";
+import { ProductsPage } from "../pages/Products/ProductsPage";
 
 export function AppRoutes() {
   return (
@@ -16,6 +17,7 @@ export function AppRoutes() {
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/services" element={<ServicesPage />} />
+        <Route path="/products" element={<ProductsPage />} />
         <Route path="/trainers" element={<TrainersPage />} />
         <Route path="/membership" element={<MembershipPage />} />
         <Route path="/gallery" element={<GalleryPage />} />

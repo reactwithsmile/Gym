@@ -16,6 +16,7 @@ import { TrainersPage } from "../pages/Trainers/TrainersPage";
 import { UsersPage } from "../pages/Users/UsersPage";
 import { FeesPage } from "../pages/Fees/FeesPage";
 import { EnquiriesPage } from "../pages/Enquiries/EnquiriesPage";
+import { ProductsPage } from "../pages/Products/ProductsPage";
 
 export function AppRoutes() {
   return (
@@ -36,7 +37,9 @@ export function AppRoutes() {
           <Route path="/roles" element={<RolesPage />} />
           <Route path="/users" element={<UsersPage />} />
           <Route path="/fees" element={<FeesPage />} />
+          <Route path="/members" element={<FeesPage />} />
           <Route path="/enquiries" element={<EnquiriesPage />} />
+          <Route path="/products" element={<ProductsPage />} />
         </Route>
       </Route>
     </Routes>

@@ -68,4 +68,8 @@ export const Permission = {
   NotificationsEdit: "notifications.edit",
   EnquiriesView: "enquiries.view",
   EnquiriesEdit: "enquiries.edit",
+  ProductsView: "products.view",
+  ProductsCreate: "products.create",
+  ProductsEdit: "products.edit",
+  ProductsDelete: "products.delete",
 } as const;
