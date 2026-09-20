@@ -50,7 +50,7 @@ export function AboutPage() {
   return (
     <main className="about-section about-route-section">
       <div className="about-visual">
-        {about.imageUrl ? <img src={about.imageUrl} alt={about.title} /> : <div className="about-image-placeholder" />}
+        {about.imageUrl ? <ImageFrame src={about.imageUrl} alt={about.title} className="about-image" /> : <div className="about-image-placeholder" />}
         <span className="about-line" />
       </div>
       <div className="about-copy">
@@ -66,3 +66,4 @@ export function AboutPage() {
     </main>
   );
 }
+import { ImageFrame } from "../../components/ImageFrame";

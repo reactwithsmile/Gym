@@ -188,6 +188,22 @@ button { font: inherit; }
   filter: blur(120px);
   pointer-events: none;
 }
+.home-page section:not(.hero-section)::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  right: 12%;
+  width: 28%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,106,0,.5), transparent);
+  box-shadow: 0 0 28px rgba(255,106,0,.18);
+  pointer-events: none;
+}
+@keyframes section-rise {
+  from { opacity: .74; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
 .hero-content {
   position: relative;
@@ -603,10 +619,808 @@ button { font: inherit; }
   .enquiry-form > div { grid-template-columns: 1fr; }
 }
 
+.goal-section, .why-stay-section, .spotlight-section, .transformation-section, .final-cta-section {
+  position: relative;
+  overflow: hidden;
+  padding: 120px clamp(20px, 7vw, 110px);
+  background: #090909;
+}
+.goal-section { display: grid; grid-template-columns: .9fr 1.1fr; gap: clamp(45px, 9vw, 150px); align-items: center; }
+.goal-copy h2, .why-stay-intro h2, .spotlight-copy h2, .transformation-heading h2, .final-cta-section h2 {
+  margin: 20px 0 25px; font-family: Impact, Haettenschweiler, sans-serif; font-size: clamp(3.7rem, 7vw, 8rem); line-height: .84; text-transform: uppercase;
+}
+.goal-copy h2 em, .why-stay-intro h2 em, .spotlight-copy h2 em, .transformation-heading h2 em, .final-cta-section h2 em { color: var(--accent); font-style: normal; }
+.goal-copy p { max-width: 430px; min-height: 56px; color: var(--muted); line-height: 1.7; }
+.goal-cta { display: inline-flex; gap: 24px; margin-top: 25px; padding: 14px 0; border-bottom: 1px solid var(--accent); color: var(--text); text-transform: uppercase; font-size: 11px; letter-spacing: .12em; }
+.goal-options { display: grid; gap: 0; border-top: 1px solid var(--border); }
+.goal-option { display: grid; grid-template-columns: 48px 1fr 25px; align-items: center; gap: 12px; min-height: 74px; padding: 0 16px; border: 0; border-bottom: 1px solid var(--border); background: transparent; color: var(--muted); text-align: left; cursor: pointer; transition: background .25s ease, color .25s ease, transform .25s ease; }
+.goal-option span { color: var(--accent); font-size: 11px; letter-spacing: .14em; }
+.goal-option strong { font-size: clamp(17px, 2vw, 25px); letter-spacing: .04em; }
+.goal-option i { font-style: normal; opacity: 0; color: var(--accent); }
+.goal-option:hover, .goal-option.is-active { color: var(--text); background: rgba(255,106,0,.08); transform: translateX(8px); }
+.goal-option.is-active i { opacity: 1; }
+.why-stay-section { display: grid; grid-template-columns: .8fr 1.2fr; gap: 80px; background: #0d0d0d; }
+.why-stay-list { border-top: 1px solid var(--border); }
+.why-stay-list div { display: grid; grid-template-columns: 52px 1fr 24px; align-items: center; gap: 14px; padding: 23px 0; border-bottom: 1px solid var(--border); }
+.why-stay-list span { color: var(--accent); font-size: 11px; }
+.why-stay-list strong { font-size: clamp(24px, 4vw, 55px); letter-spacing: .02em; }
+.why-stay-list i { color: var(--accent); font-style: normal; }
+.spotlight-section { display: grid; grid-template-columns: minmax(280px, .9fr) 1.1fr; gap: clamp(42px, 8vw, 120px); align-items: center; background: #080808; }
+.spotlight-image { min-height: 520px; padding: 0 24px 24px 0; }
+.spotlight-image img, .spotlight-placeholder { width: 100%; height: 520px; display: grid; place-items: center; object-fit: cover; background: #171717; border: 1px solid var(--border); }
+.spotlight-image::after { content: ""; position: absolute; left: clamp(20px, 7vw, 110px); bottom: 96px; width: 30%; height: 40%; border: 1px solid var(--accent); pointer-events: none; }
+.spotlight-placeholder { position: relative; overflow: hidden; color: var(--text); text-align: center; letter-spacing: .18em; font-size: 11px; background: radial-gradient(circle at 72% 28%, rgba(255,106,0,.18), transparent 25%), linear-gradient(145deg, #111 0%, #070707 70%); }
+.spotlight-placeholder::before { content: ""; position: absolute; inset: 10%; border: 1px solid rgba(255,106,0,.25); transform: rotate(-6deg); }
+.spotlight-placeholder strong, .spotlight-placeholder small, .spotlight-placeholder-mark { position: relative; z-index: 1; display: block; }
+.spotlight-placeholder strong { font-size: clamp(24px, 3vw, 42px); line-height: .95; }
+.spotlight-placeholder small { margin-top: 18px; color: var(--muted); font-size: 9px; letter-spacing: .16em; text-transform: uppercase; }
+.spotlight-placeholder-mark { margin-bottom: 25px; color: var(--accent); font-size: 42px; font-weight: 300; }
+.spotlight-number { display: block; margin-top: 28px; color: var(--accent); font-size: 12px; letter-spacing: .2em; }
+.spotlight-quote { max-width: 500px; color: var(--text); font-size: clamp(20px, 2.5vw, 32px); text-transform: uppercase; }
+.spotlight-stats { display: flex; flex-wrap: wrap; gap: 28px; margin-top: 35px; padding-top: 22px; border-top: 1px solid var(--border); }
+.spotlight-stats span { color: var(--muted); font-size: 10px; letter-spacing: .12em; }
+.spotlight-stats strong { display: block; color: var(--accent); font-size: 28px; }
+.editable-note { display: block; margin-top: 30px; color: #777; }
+.transformation-section { background: #0b0b0b; }
+.transformation-heading { display: flex; align-items: end; justify-content: space-between; gap: 30px; max-width: 1200px; margin: 0 auto 45px; }
+.transformation-heading p { max-width: 300px; color: var(--muted); line-height: 1.7; }
+.transformation-grid { display: grid; grid-template-columns: 1.2fr .8fr .8fr; grid-auto-rows: 220px; gap: 14px; max-width: 1200px; margin: auto; }
+.transformation-tile { position: relative; grid-row: span 1; min-height: 0; margin: 0; overflow: hidden; background: #151515; }
+.transformation-tile-0 { grid-row: span 2; }
+.transformation-tile-3 { grid-column: span 2; }
+.transformation-tile img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease, filter .5s ease; filter: saturate(.75) contrast(1.12); }
+.transformation-tile:hover img { transform: scale(1.06); filter: saturate(1) contrast(1.1); }
+.transformation-tile figcaption { position: absolute; right: 14px; bottom: 14px; left: 14px; display: flex; justify-content: space-between; color: #fff; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; }
+.transformation-tile figcaption span { color: var(--accent); }
+.transformation-empty { grid-column: 1 / -1; display: grid; place-items: center; min-height: 220px; color: var(--muted); border: 1px dashed var(--border); }
+.final-cta-section { text-align: center; background: radial-gradient(circle at 50% 10%, rgba(255,106,0,.13), transparent 35%), #080808; }
+.final-cta-section h2 { max-width: 900px; margin: 20px auto 35px; }
+
+@media (max-width: 700px) {
+  .goal-section, .why-stay-section, .spotlight-section { grid-template-columns: 1fr; gap: 45px; padding-top: 85px; padding-bottom: 85px; }
+  .goal-copy h2, .why-stay-intro h2, .spotlight-copy h2, .transformation-heading h2, .final-cta-section h2 { font-size: clamp(3.2rem, 15vw, 5.5rem); }
+  .spotlight-image, .spotlight-image img, .spotlight-placeholder { min-height: 380px; height: 380px; }
+  .spotlight-image::after { bottom: auto; top: 72px; height: 250px; }
+  .transformation-heading { display: block; }
+  .transformation-heading p { margin-top: 24px; }
+  .transformation-grid { grid-template-columns: 1fr 1fr; grid-auto-rows: 180px; }
+  .transformation-tile-0 { grid-row: span 2; }
+  .transformation-tile-3 { grid-column: span 2; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .goal-option, .transformation-tile img { transition: none; }
+  .goal-option:hover { transform: none; }
+}
+
+/* CMS image presentation varies by subject: portraits stay intact while
+   environments and editorial gallery tiles can fill their frames. */
+.image--portrait {
+  object-fit: cover;
+  object-position: center top;
+}
+.image--landscape {
+  object-fit: cover;
+  object-position: center;
+}
+.image--contain {
+  object-fit: contain;
+  object-position: center;
+  background: #171717;
+}
+.image--cover {
+  object-fit: cover;
+  object-position: center top;
+}
+.spotlight-image img.image--portrait,
+.trainer-image img.image--portrait {
+  object-fit: cover;
+  object-position: center top;
+}
+.spotlight-image img.image--portrait {
+  object-fit: contain;
+  background: #171717;
+}
+.testimonial-avatar.image--portrait {
+  object-fit: contain;
+  object-position: center top;
+  background: #171717;
+}
+.service-image img.image--contain {
+  object-fit: contain;
+  object-position: center;
+}
+.gallery-card img.image--cover,
+.transformation-tile img.image--cover {
+  object-fit: cover;
+  object-position: center top;
+}
+.service-card:hover .service-image img.image--contain {
+  transform: none;
+}
+.image--product {
+  object-fit: contain;
+  object-position: center;
+  background: #171717;
+}
+
+/* Responsive image frames keep the layout stable without imposing one crop
+   strategy on every CMS subject. */
+.about-visual {
+  min-height: 0;
+  height: auto;
+  aspect-ratio: 21 / 26;
+  max-height: 520px;
+}
+.about-visual img,
+.about-image-placeholder {
+  height: 100%;
+}
+.service-image {
+  height: auto;
+  aspect-ratio: 3 / 2;
+}
+.trainer-image {
+  height: auto;
+  aspect-ratio: 16 / 21;
+}
+.spotlight-image {
+  min-height: 0;
+  height: auto;
+  aspect-ratio: 1;
+  max-width: 520px;
+}
+.spotlight-image img,
+.spotlight-placeholder {
+  height: 100%;
+}
+.gallery-card img.image--cover,
+.transformation-tile img.image--cover {
+  object-position: center top;
+}
+
+@media (max-width: 900px) {
+  .about-visual {
+    max-height: 480px;
+  }
+  .spotlight-image {
+    max-width: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .about-visual {
+    aspect-ratio: 4 / 3;
+    max-height: 380px;
+  }
+  .service-image {
+    aspect-ratio: 3 / 2;
+  }
+  .trainer-image {
+    aspect-ratio: 4 / 5;
+  }
+  .spotlight-image {
+    aspect-ratio: 1;
+  }
+}
+
+/* Final image-frame precedence keeps legacy visual polish from changing the
+   smart contained foreground behavior. */
+.image-frame-foreground {
+  object-fit: contain;
+  object-position: center;
+}
+.image-frame-foreground.image--hero {
+  object-fit: contain;
+  object-position: 72% center;
+}
+.hero-image-frame .image-frame-foreground {
+  width: 100%;
+  height: 100%;
+}
+.service-image > .image-frame .image-frame-foreground,
+.trainer-image > .image-frame .image-frame-foreground,
+.spotlight-image-frame .image-frame-foreground,
+.gallery-card > .image-frame .image-frame-foreground,
+.transformation-tile > .image-frame .image-frame-foreground {
+  object-fit: contain;
+}
+.service-card:hover .image-frame-foreground,
+.trainer-card:hover .image-frame-foreground,
+.gallery-card:hover .image-frame-foreground,
+.transformation-tile:hover .image-frame-foreground {
+  transform: scale(1.05);
+}
+
+@media (max-width: 600px) {
+  .hero-image-frame .image-frame-foreground {
+    object-position: center;
+  }
+}
+
+/* Home hero direction: editorial split composition with a contained athlete
+   and an image-backed atmosphere on the right. */
+.hero-section {
+  min-height: 92vh;
+  padding-top: 132px;
+  padding-bottom: 92px;
+  background:
+    radial-gradient(circle at 76% 45%, rgba(255, 106, 0, .12), transparent 28%),
+    linear-gradient(112deg, #050505 0%, #070707 48%, #10100f 100%);
+}
+.hero-backdrop {
+  background:
+    linear-gradient(90deg, rgba(3, 3, 3, .99) 0%, rgba(3, 3, 3, .95) 30%, rgba(3, 3, 3, .68) 57%, rgba(3, 3, 3, .3) 100%),
+    linear-gradient(0deg, rgba(3, 3, 3, .9), transparent 42%, rgba(3, 3, 3, .28));
+}
+.hero-content {
+  width: min(700px, 53%);
+  padding-bottom: 22px;
+}
+.hero-content .eyebrow {
+  font-size: 13px;
+  letter-spacing: .23em;
+}
+.hero-content h1 {
+  max-width: 690px;
+  margin: 27px 0 27px;
+  font-size: clamp(4.8rem, 8vw, 8.8rem);
+  line-height: .82;
+  letter-spacing: -.015em;
+}
+.hero-heading-highlight {
+  position: relative;
+  z-index: 0;
+  color: var(--accent);
+  white-space: nowrap;
+}
+.hero-heading-highlight::before {
+  display: none;
+}
+.hero-description {
+  max-width: 510px;
+  font-size: clamp(15px, 1.25vw, 18px);
+  line-height: 1.55;
+}
+.hero-actions {
+  margin-top: 31px;
+}
+.hero-button {
+  min-height: 54px;
+  border-radius: 2px;
+}
+.hero-features {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-width: 700px;
+  margin-top: 42px;
+}
+.hero-features > div {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+  padding: 0 22px;
+  border-left: 1px solid rgba(255, 255, 255, .2);
+}
+.hero-features > div:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+.hero-feature-icon {
+  flex: 0 0 auto;
+  color: var(--accent);
+  font-size: 28px;
+  line-height: 1;
+}
+.hero-features strong,
+.hero-features small {
+  display: block;
+}
+.hero-features strong {
+  color: var(--text);
+  font-size: 11px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.hero-features small {
+  margin-top: 6px;
+  color: rgba(255, 255, 255, .55);
+  font-size: 10px;
+}
+.hero-visual {
+  width: 59%;
+  right: -2%;
+  height: 100%;
+}
+.hero-image-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+}
+.hero-image-frame::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, #050505 0%, rgba(5, 5, 5, .62) 18%, transparent 54%, rgba(5, 5, 5, .18) 100%);
+}
+.hero-image-frame .image-frame-background {
+  filter: blur(25px) saturate(.75) brightness(.52);
+  transform: scale(1.1);
+}
+.hero-image-frame .image-frame-overlay {
+  background: rgba(0, 0, 0, .18);
+}
+.hero-image-frame .image-frame-foreground {
+  position: relative;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: 72% center;
+  opacity: .9;
+  filter: saturate(.82) contrast(1.14) brightness(.82);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, .55) 13%, #000 35%, #000 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, .55) 13%, #000 35%, #000 100%);
+  transform: translate3d(var(--hero-x), var(--hero-y), 40px) scale(1.02);
+}
+.hero-section::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  right: -3%;
+  bottom: -20%;
+  width: 43%;
+  height: 2px;
+  background: var(--accent);
+  box-shadow: 0 0 22px rgba(255, 106, 0, .75);
+  transform: rotate(-55deg);
+  opacity: .85;
+  pointer-events: none;
+}
+.hero-cross-one { top: 22%; right: 9%; }
+.hero-cross-two { bottom: 22%; left: 7%; }
+.hero-stats { display: none; }
+.hero-scroll { bottom: 30px; }
+
+@media (max-width: 1100px) {
+  .hero-content {
+    width: min(620px, 55%);
+  }
+  .hero-content h1 {
+    font-size: clamp(4rem, 7.6vw, 6.8rem);
+  }
+  .hero-visual {
+    width: 62%;
+  }
+}
+
+@media (max-width: 900px) {
+  .hero-section {
+    min-height: 820px;
+    padding-top: 122px;
+    padding-bottom: 90px;
+  }
+  .hero-content {
+    width: 57%;
+  }
+  .hero-content h1 {
+    font-size: clamp(3.7rem, 8vw, 5.7rem);
+  }
+  .hero-features {
+    display: block;
+    margin-top: 32px;
+  }
+  .hero-features > div {
+    display: inline-flex;
+    width: 32%;
+    padding: 0 12px;
+  }
+  .hero-features > div:first-child {
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero-section {
+    min-height: 830px;
+    padding: 116px 20px 58px;
+    align-items: flex-start;
+  }
+  .hero-content {
+    z-index: 3;
+    width: 100%;
+    padding-bottom: 0;
+  }
+  .hero-content h1 {
+    max-width: 100%;
+    margin-top: 23px;
+    font-size: clamp(3.4rem, 15vw, 5.8rem);
+    line-height: .84;
+  }
+  .hero-description {
+    max-width: 360px;
+    font-size: 15px;
+  }
+  .hero-actions {
+    align-items: stretch;
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
+  .hero-button {
+    min-width: 0;
+    flex: 1 1 0;
+    padding-inline: 12px;
+    font-size: 10px;
+  }
+  .hero-features {
+    position: relative;
+    z-index: 4;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    max-width: 250px;
+    margin-top: 27px;
+  }
+  .hero-features > div,
+  .hero-features > div:first-child {
+    width: 100%;
+    padding: 0 0 10px;
+    border-left: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, .16);
+  }
+  .hero-features > div:last-child {
+    border-bottom: 0;
+  }
+  .hero-visual {
+    top: 31%;
+    right: -17%;
+    width: 111%;
+    height: 69%;
+    opacity: .8;
+  }
+  .hero-image-frame .image-frame-foreground {
+    object-position: center;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, .48) 20%, #000 50%, #000 100%);
+    mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, .48) 20%, #000 50%, #000 100%);
+  }
+  .hero-image-frame::after {
+    background: linear-gradient(180deg, rgba(5, 5, 5, .7) 0%, transparent 38%, rgba(5, 5, 5, .18) 100%);
+  }
+  .hero-cross-one { top: 22%; right: 8%; }
+  .hero-cross-two { bottom: 17%; left: 8%; }
+  .hero-scroll,
+  .hero-vertical-label {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-image-frame .image-frame-foreground {
+    transform: none;
+  }
+}
+
+/* Final visual polish: tighter editorial rhythm and consistent premium surfaces. */
+:root {
+  --content-width: 1240px;
+  --section-space: clamp(76px, 8vw, 112px);
+}
+.site-header {
+  height: 76px;
+  padding-inline: clamp(18px, 4.5vw, 72px);
+  background: linear-gradient(180deg, rgba(4,4,4,.78), rgba(4,4,4,0));
+}
+.site-header-scrolled {
+  background: rgba(8,8,8,.94);
+  box-shadow: 0 10px 32px rgba(0,0,0,.22);
+}
+.site-header nav a {
+  position: relative;
+  padding-block: 8px;
+}
+.site-header nav a:not(.header-join)::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform .22s ease;
+}
+.site-header nav a:not(.header-join):hover::after,
+.site-header nav a:not(.header-join).active::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+.header-join {
+  transition: transform .22s ease, box-shadow .22s ease;
+}
+.header-join:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(255,106,0,.3);
+}
+.hero-section {
+  min-height: min(860px, 100svh);
+  padding-top: 128px;
+  padding-bottom: 120px;
+}
+.hero-content h1 {
+  max-width: 690px;
+  font-size: clamp(3.7rem, 7.3vw, 8rem);
+}
+.hero-description { max-width: 460px; }
+.hero-meta { margin-top: 38px; }
+.about-section,
+.services-section,
+.trainers-section,
+.membership-section,
+.testimonials-section,
+.gallery-section,
+.contact-section {
+  padding-top: var(--section-space);
+  padding-bottom: calc(var(--section-space) + 8px);
+}
+.about-section {
+  min-height: 0;
+  max-width: none;
+}
+.about-section > *,
+.services-heading,
+.services-grid,
+.trainers-heading,
+.trainers-grid,
+.membership-heading,
+.membership-grid,
+.testimonials-heading,
+.testimonials-grid,
+.gallery-heading,
+.gallery-grid,
+.contact-heading,
+.contact-layout {
+  max-width: var(--content-width);
+}
+.about-section > * { width: 100%; }
+.about-visual, .about-visual img, .about-image-placeholder { min-height: 430px; height: 430px; }
+.about-copy h2,
+.services-heading h1, .services-heading h2,
+.trainers-heading h2,
+.membership-heading h2,
+.testimonials-heading h1, .testimonials-heading h2,
+.gallery-heading h2,
+.contact-heading h2 {
+  font-size: clamp(2.8rem, 5.4vw, 5.8rem);
+}
+.about-copy h2 { margin-top: 14px; }
+.services-heading, .trainers-heading, .membership-heading, .testimonials-heading, .gallery-heading {
+  margin-bottom: 32px;
+}
+.services-grid { gap: 16px; }
+.service-card, .trainer-card, .membership-card, .testimonial-card, .gallery-card {
+  border-radius: 3px;
+}
+.service-image { height: 200px; }
+.trainer-image { height: 300px; }
+.membership-card { padding: 26px 24px 22px; }
+.membership-card h3 { font-size: 24px; }
+.membership-price { margin: 16px 0; font-size: 36px; }
+.testimonial-card { padding: 23px; }
+.testimonial-card blockquote { min-height: 88px; font-size: 16px; }
+.gallery-grid { grid-auto-rows: 170px; }
+.contact-section { padding-bottom: 104px; }
+.goal-section, .why-stay-section, .spotlight-section, .transformation-section, .final-cta-section {
+  padding-top: var(--section-space);
+  padding-bottom: var(--section-space);
+}
+.goal-section { max-width: var(--content-width); margin: 0 auto; }
+.goal-copy h2, .why-stay-intro h2, .spotlight-copy h2, .transformation-heading h2, .final-cta-section h2 {
+  font-size: clamp(3rem, 5.8vw, 6.5rem);
+}
+.goal-option { min-height: 66px; }
+.goal-option::before {
+  content: "";
+  width: 4px;
+  height: 0;
+  background: var(--accent);
+  transition: height .22s ease;
+}
+.goal-option.is-active::before { height: 28px; }
+.why-stay-section { max-width: none; padding-inline: clamp(20px, 7vw, 110px); }
+.why-stay-list div { transition: padding .22s ease, background .22s ease; }
+.why-stay-list div:hover { padding-inline: 14px; background: rgba(255,106,0,.055); }
+.spotlight-section { max-width: none; }
+.spotlight-image, .spotlight-image img, .spotlight-placeholder { min-height: 430px; height: 430px; }
+.transformation-heading { margin-bottom: 32px; }
+.transformation-grid { grid-auto-rows: 190px; gap: 12px; }
+.final-cta-section { min-height: 390px; display: grid; place-items: center; align-content: center; }
+.final-cta-section .eyebrow, .final-cta-section h2, .final-cta-section .hero-button { position: relative; z-index: 1; }
+.final-cta-section::before {
+  content: "";
+  position: absolute;
+  inset: 15% 25%;
+  border: 1px solid rgba(255,106,0,.16);
+  transform: skewX(-12deg);
+  box-shadow: 0 0 70px rgba(255,106,0,.09);
+}
+.gallery-empty, .services-empty, .trainers-empty, .membership-empty, .testimonials-empty, .contact-empty {
+  min-height: 90px;
+  display: grid;
+  place-items: center;
+  border: 1px dashed rgba(255,255,255,.15);
+  background: rgba(255,255,255,.018);
+}
+.home-page section:not(.hero-section) {
+  animation-range: entry 0% cover 18%;
+}
+
+@media (max-width: 900px) {
+  .site-header { height: 72px; }
+  .site-header nav.site-nav-open { top: 72px; }
+  .hero-section { min-height: 760px; padding-top: 126px; }
+  .hero-content h1 { font-size: clamp(3.3rem, 9vw, 6rem); }
+  .services-grid, .trainers-grid, .membership-grid, .testimonials-grid { gap: 14px; }
+}
+
+@media (max-width: 600px) {
+  .hero-section { min-height: 720px; padding: 122px 20px 168px; }
+  .hero-content h1 { font-size: clamp(3.15rem, 15vw, 5.4rem); line-height: .88; }
+  .hero-description { font-size: 15px; }
+  .about-section, .services-section, .trainers-section, .membership-section,
+  .testimonials-section, .gallery-section, .contact-section,
+  .goal-section, .why-stay-section, .spotlight-section, .transformation-section, .final-cta-section {
+    padding-top: 72px;
+    padding-bottom: 76px;
+  }
+  .about-visual, .about-visual img, .about-image-placeholder,
+  .spotlight-image, .spotlight-image img, .spotlight-placeholder {
+    min-height: 330px;
+    height: 330px;
+  }
+  .about-copy h2,
+  .services-heading h1, .services-heading h2,
+  .trainers-heading h2, .membership-heading h2,
+  .testimonials-heading h1, .testimonials-heading h2,
+  .gallery-heading h2, .contact-heading h2 {
+    font-size: clamp(2.7rem, 14vw, 4.6rem);
+  }
+  .goal-copy h2, .why-stay-intro h2, .spotlight-copy h2, .transformation-heading h2, .final-cta-section h2 {
+    font-size: clamp(3rem, 14vw, 5rem);
+  }
+  .services-heading, .trainers-heading, .membership-heading, .testimonials-heading, .gallery-heading {
+    margin-bottom: 26px;
+  }
+  .service-image { height: 190px; }
+  .trainer-image { height: 270px; }
+  .gallery-grid, .transformation-grid { grid-auto-rows: 150px; gap: 10px; }
+  .final-cta-section { min-height: 350px; }
+  .final-cta-section::before { inset: 12% 8%; }
+  .site-footer { flex-direction: column; padding-block: 28px; }
+}
+
+/* Smart CMS frame: the original image stays complete in front of a blurred
+   copy of itself, so unlike a plain contain frame it never leaves harsh bars. */
+.image-frame {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  isolation: isolate;
+  background: #171717;
+}
+.image-frame-background,
+.image-frame-overlay {
+  position: absolute;
+  inset: 0;
+  display: block;
+  pointer-events: none;
+}
+.image-frame-background {
+  z-index: -2;
+  background-position: center;
+  background-size: cover;
+  filter: blur(22px);
+  transform: scale(1.08);
+}
+.image-frame-overlay {
+  z-index: -1;
+  background: rgba(0, 0, 0, .3);
+}
+.image-frame-foreground {
+  position: relative;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+.image-frame-foreground.image--hero {
+  object-position: 72% center;
+}
+.hero-image-frame .image-frame-foreground {
+  filter: saturate(.72) contrast(1.2) brightness(.68);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,.42) 16%, #000 43%, #000 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,.42) 16%, #000 43%, #000 100%);
+}
+.about-image,
+.spotlight-image-frame,
+.transformation-tile > .image-frame,
+.gallery-card > .image-frame {
+  border: 1px solid var(--border);
+}
+.about-image {
+  position: relative;
+  z-index: 1;
+}
+.service-image > .image-frame,
+.trainer-image > .image-frame {
+  width: 100%;
+  height: 100%;
+}
+.service-image > .image-frame .image-frame-foreground,
+.trainer-image > .image-frame .image-frame-foreground,
+.spotlight-image-frame .image-frame-foreground {
+  object-fit: contain;
+}
+.testimonial-avatar.image-frame {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: 1px solid var(--accent);
+}
+.testimonial-avatar .image-frame-foreground {
+  object-fit: contain;
+}
+.product-card > .image-frame {
+  width: 100%;
+  height: 220px;
+}
+.gallery-card > .image-frame,
+.transformation-tile > .image-frame {
+  width: 100%;
+  height: 100%;
+}
+.gallery-card > .image-frame .image-frame-foreground,
+.transformation-tile > .image-frame .image-frame-foreground {
+  object-fit: contain;
+}
+.service-card:hover .image-frame-foreground,
+.trainer-card:hover .image-frame-foreground,
+.gallery-card:hover .image-frame-foreground,
+.transformation-tile:hover .image-frame-foreground {
+  transform: scale(1.05);
+}
+.gallery-card:hover .image-frame-foreground,
+.transformation-tile:hover .image-frame-foreground {
+  filter: saturate(1.15);
+}
+
+@media (max-width: 600px) {
+  .hero-image-frame .image-frame-foreground {
+    object-position: center;
+  }
+  .product-card > .image-frame {
+    height: 220px;
+  }
+}
+
 /* Homepage depth system: GPU-light CSS 3D keeps the CMS content untouched. */
 .home-page section:not(.hero-section) {
   position: relative;
   isolation: isolate;
+  animation: section-rise linear both;
+  animation-timeline: view();
+  animation-range: entry 0% cover 28%;
 }
 .home-page section:not(.hero-section)::before {
   content: "";
@@ -658,4 +1472,138 @@ button { font: inherit; }
   .hero-button:hover, .service-card:hover, .trainer-card:hover, .membership-card:hover,
   .testimonial-card:hover, .gallery-card:hover { transform: translateY(-4px); }
   .about-visual:hover img { transform: none; }
+  .home-page section:not(.hero-section) { animation: none; }
+}
+
+/* Final image-frame precedence: keep the smart frame behavior ahead of the
+   older visual polish selectors above. */
+.image-frame-foreground {
+  object-fit: contain;
+  object-position: center;
+}
+.image-frame-foreground.image--hero {
+  object-fit: contain;
+  object-position: 72% center;
+}
+.hero-image-frame .image-frame-foreground {
+  width: 100%;
+  height: 100%;
+}
+.service-image > .image-frame .image-frame-foreground,
+.trainer-image > .image-frame .image-frame-foreground,
+.spotlight-image-frame .image-frame-foreground,
+.gallery-card > .image-frame .image-frame-foreground,
+.transformation-tile > .image-frame .image-frame-foreground {
+  object-fit: contain;
+}
+.service-card:hover .image-frame-foreground,
+.trainer-card:hover .image-frame-foreground,
+.gallery-card:hover .image-frame-foreground,
+.transformation-tile:hover .image-frame-foreground {
+  transform: scale(1.05);
+}
+
+@media (max-width: 600px) {
+  .hero-image-frame .image-frame-foreground {
+    object-position: center;
+  }
+}
+
+/* Keep the section frame rules last so legacy breakpoint declarations cannot
+   change the intended CMS image proportions. */
+.about-visual {
+  min-height: 0;
+  height: auto;
+  aspect-ratio: 21 / 26;
+  max-height: 520px;
+}
+.about-visual img,
+.about-image-placeholder {
+  height: 100%;
+}
+.service-image {
+  height: auto;
+  aspect-ratio: 3 / 2;
+}
+.trainer-image {
+  height: auto;
+  aspect-ratio: 16 / 21;
+}
+.trainer-image img.image--portrait {
+  object-fit: cover;
+  object-position: center top;
+}
+.spotlight-image {
+  min-height: 0;
+  height: auto;
+  aspect-ratio: 1;
+  max-width: 520px;
+}
+.spotlight-image img,
+.spotlight-placeholder {
+  height: 100%;
+}
+.spotlight-image img.image--portrait {
+  object-fit: contain;
+  object-position: center;
+  background: #171717;
+}
+
+@media (max-width: 900px) {
+  .about-visual {
+    max-height: 480px;
+  }
+  .spotlight-image {
+    max-width: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .about-visual {
+    aspect-ratio: 4 / 3;
+    max-height: 380px;
+  }
+  .service-image {
+    aspect-ratio: 3 / 2;
+  }
+  .trainer-image {
+    aspect-ratio: 4 / 5;
+  }
+  .spotlight-image {
+    aspect-ratio: 1;
+  }
+}
+
+/* Final image-frame precedence keeps legacy visual polish from changing the
+   smart contained foreground behavior. */
+.image-frame-foreground {
+  object-fit: contain;
+  object-position: center;
+}
+.image-frame-foreground.image--hero {
+  object-fit: contain;
+  object-position: 72% center;
+}
+.hero-image-frame .image-frame-foreground {
+  width: 100%;
+  height: 100%;
+}
+.service-image > .image-frame .image-frame-foreground,
+.trainer-image > .image-frame .image-frame-foreground,
+.spotlight-image-frame .image-frame-foreground,
+.gallery-card > .image-frame .image-frame-foreground,
+.transformation-tile > .image-frame .image-frame-foreground {
+  object-fit: contain;
+}
+.service-card:hover .image-frame-foreground,
+.trainer-card:hover .image-frame-foreground,
+.gallery-card:hover .image-frame-foreground,
+.transformation-tile:hover .image-frame-foreground {
+  transform: scale(1.05);
+}
+
+@media (max-width: 600px) {
+  .hero-image-frame .image-frame-foreground {
+    object-position: center;
+  }
 }

@@ -28,6 +28,7 @@ public class AppDbContext : DbContext
     public DbSet<Notification> Notifications => Set<Notification>();
     public DbSet<Enquiry> Enquiries => Set<Enquiry>();
     public DbSet<Product> Products => Set<Product>();
+    public DbSet<MemberSpotlight> MemberSpotlights => Set<MemberSpotlight>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -160,6 +161,17 @@ public class AppDbContext : DbContext
             entity.Property(item => item.Review).HasMaxLength(2000).IsRequired();
             entity.Property(item => item.ImageUrl).HasColumnType("nvarchar(max)");
             entity.HasIndex(item => new { item.IsActive, item.DisplayOrder });
+        });
+
+        modelBuilder.Entity<MemberSpotlight>(entity =>
+        {
+            entity.Property(item => item.MemberName).HasMaxLength(200).IsRequired();
+            entity.Property(item => item.Quote).HasMaxLength(1000);
+            entity.Property(item => item.Story).HasMaxLength(4000);
+            entity.Property(item => item.ImageUrl).HasColumnType("nvarchar(max)");
+            entity.Property(item => item.DurationText).HasMaxLength(200);
+            entity.Property(item => item.AchievementText).HasMaxLength(500);
+            entity.HasIndex(item => new { item.IsActive, item.IsFeatured, item.DisplayOrder });
         });
 
         modelBuilder.Entity<Contact>(entity =>

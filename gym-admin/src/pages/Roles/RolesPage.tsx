@@ -44,6 +44,7 @@ const permissionMatrix: PermissionMatrixEntry[] = [
   { module: "Roles & Permissions", key: "roles", actions: ["view", "edit"], codes: { view: "roles.view", create: "", edit: "roles.edit", delete: "" } },
   { module: "Enquiries", key: "enquiries", actions: ["view", "edit"], codes: { view: "enquiries.view", create: "", edit: "enquiries.edit", delete: "" } },
   { module: "Products", key: "products", actions: ["view", "create", "edit", "delete"], codes: { view: "products.view", create: "products.create", edit: "products.edit", delete: "products.delete" } },
+  { module: "Member Spotlight", key: "memberSpotlight", actions: ["view", "create", "edit", "delete"], codes: { view: "memberSpotlight.view", create: "memberSpotlight.create", edit: "memberSpotlight.edit", delete: "memberSpotlight.delete" } },
 ];
 
 const tableHeaderActions: ActionKey[] = ["view", "create", "edit", "delete"];

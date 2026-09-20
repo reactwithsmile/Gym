@@ -65,6 +65,10 @@ public static class PermissionCodes
     public const string ProductsCreate = "products.create";
     public const string ProductsEdit = "products.edit";
     public const string ProductsDelete = "products.delete";
+    public const string MemberSpotlightView = "memberSpotlight.view";
+    public const string MemberSpotlightCreate = "memberSpotlight.create";
+    public const string MemberSpotlightEdit = "memberSpotlight.edit";
+    public const string MemberSpotlightDelete = "memberSpotlight.delete";
 
     public static readonly string[] All =
     [
@@ -84,7 +88,8 @@ public static class PermissionCodes
         FeesView, FeesCreate, FeesEdit,
         NotificationsView, NotificationsEdit,
         EnquiriesView, EnquiriesEdit,
-        ProductsView, ProductsCreate, ProductsEdit, ProductsDelete
+        ProductsView, ProductsCreate, ProductsEdit, ProductsDelete,
+        MemberSpotlightView, MemberSpotlightCreate, MemberSpotlightEdit, MemberSpotlightDelete
     ];
 }
 

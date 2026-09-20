@@ -16,6 +16,7 @@ const navItems = [
   { to: "/services", label: "Services", group: "Website content", permission: Permission.ServicesManage },
   { to: "/trainers", label: "Trainers", group: "Website content", permission: Permission.TrainersManage },
   { to: "/gallery", label: "Gallery", group: "Website content", permission: Permission.GalleryManage },
+  { to: "/member-spotlight", label: "Member Spotlight", group: "Website content", permission: Permission.MemberSpotlightView },
   { to: "/testimonials", label: "Testimonials", group: "Website content", permission: Permission.TestimonialsManage },
   { to: "/contact", label: "Contact", group: "Website content", permission: Permission.ContactManage },
   { to: "/settings", label: "Settings", group: "Administration", permission: Permission.SettingsManage },

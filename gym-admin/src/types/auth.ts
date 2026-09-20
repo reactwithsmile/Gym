@@ -72,4 +72,8 @@ export const Permission = {
   ProductsCreate: "products.create",
   ProductsEdit: "products.edit",
   ProductsDelete: "products.delete",
+  MemberSpotlightView: "memberSpotlight.view",
+  MemberSpotlightCreate: "memberSpotlight.create",
+  MemberSpotlightEdit: "memberSpotlight.edit",
+  MemberSpotlightDelete: "memberSpotlight.delete",
 } as const;

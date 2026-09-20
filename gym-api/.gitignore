@@ -1,0 +1,45 @@
+# Visual Studio
+.vs/
+*.user
+*.userosscache
+*.suo
+*.rsuser
+
+# Build output
+[Bb]in/
+[Oo]bj/
+
+# Test and coverage output
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.trx
+coverage/
+
+# NuGet and package artifacts
+*.nupkg
+*.snupkg
+packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# .NET tooling
+*.csproj.user
+launchSettings.json
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+secrets.json
+appsettings.Local.json
+
+# Logs and diagnostics
+*.log
+*.tlog
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo

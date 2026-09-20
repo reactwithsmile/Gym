@@ -17,6 +17,7 @@ import { UsersPage } from "../pages/Users/UsersPage";
 import { FeesPage } from "../pages/Fees/FeesPage";
 import { EnquiriesPage } from "../pages/Enquiries/EnquiriesPage";
 import { ProductsPage } from "../pages/Products/ProductsPage";
+import { MemberSpotlightPage } from "../pages/MemberSpotlight/MemberSpotlightPage";
 
 export function AppRoutes() {
   return (
@@ -40,6 +41,7 @@ export function AppRoutes() {
           <Route path="/members" element={<FeesPage />} />
           <Route path="/enquiries" element={<EnquiriesPage />} />
           <Route path="/products" element={<ProductsPage />} />
+          <Route path="/member-spotlight" element={<MemberSpotlightPage />} />
         </Route>
       </Route>
     </Routes>

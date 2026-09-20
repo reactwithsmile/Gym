@@ -1,5 +1,6 @@
 import { useEffect, useState, type CSSProperties } from "react";
 import heroFallbackImage from "../../assets/hero.png";
+import { ImageFrame } from "../../components/ImageFrame";
 
 type HeroContent = {
   heading: string;
@@ -58,6 +59,7 @@ type ContactContent = {
   googleMapsUrl: string; instagramUrl: string; facebookUrl: string; whatsAppNumber: string; description: string;
 };
 type GymSettings = { currency: string };
+type MemberSpotlight = { memberName: string; quote: string; story: string; imageUrl: string; durationText: string; achievementText: string };
 
 const fallbackHero: HeroContent = {
   heading: "Train harder. Live stronger.",
@@ -69,6 +71,15 @@ const fallbackHero: HeroContent = {
   imageUrl: heroFallbackImage,
   isActive: true,
 };
+
+function HeroHeading({ heading }: { heading: string }) {
+  const words = heading.trim().split(/\s+/);
+  const strongestIndex = words.findIndex((word) => word.toLowerCase().replace(/[^\w]/g, "") === "strongest");
+  if (strongestIndex >= 0) {
+    return <>{words.slice(0, strongestIndex).join(" ")}{" "}<span className="hero-heading-highlight">{words[strongestIndex]}</span>{" "}{words.slice(strongestIndex + 1).join(" ")}</>;
+  }
+  return <>{heading}</>;
+}
 
 const apiUrl = import.meta.env.VITE_API_URL ?? "http://localhost:5182";
 
@@ -84,6 +95,8 @@ export function HomePage() {
   const [contact, setContact] = useState<ContactContent | null>(null);
   const [currency, setCurrency] = useState("INR");
   const [heroPointer, setHeroPointer] = useState({ x: 0, y: 0 });
+  const [spotlight, setSpotlight] = useState<MemberSpotlight | null>(null);
+  const [selectedGoal, setSelectedGoal] = useState("BUILD MUSCLE");
 
   useEffect(() => {
     let isCurrent = true;
@@ -116,6 +129,13 @@ export function HomePage() {
     return () => {
       isCurrent = false;
     };
+  }, []);
+
+  useEffect(() => {
+    fetch(`${apiUrl}/api/member-spotlights`)
+      .then(async (response) => { if (!response.ok) throw new Error("Member spotlight unavailable"); return await response.json() as MemberSpotlight | null; })
+      .then(setSpotlight)
+      .catch(() => setSpotlight(null));
   }, []);
 
   useEffect(() => {
@@ -205,7 +225,7 @@ export function HomePage() {
           {about ? (
             <>
               <div className="about-visual">
-                {about.imageUrl ? <img src={about.imageUrl} alt={about.title} /> : <div className="about-image-placeholder" />}
+                {about.imageUrl ? <ImageFrame src={about.imageUrl} alt={about.title} className="about-image" /> : <div className="about-image-placeholder" />}
                 <span className="about-line" />
               </div>
               <div className="about-copy">
@@ -221,11 +241,16 @@ export function HomePage() {
             </>
           ) : <p className="about-empty">Our story is coming soon.</p>}
         </section>
+        <GoalSection selectedGoal={selectedGoal} onSelect={setSelectedGoal} />
+        <WhyStaySection />
         <ServicesSection services={services} />
         <TrainersSection trainers={trainers} />
+        <SpotlightSection spotlight={spotlight} />
+        <TransformationWall items={gallery} testimonials={testimonials} />
         <MembershipSection plans={plans} currency={currency} />
         <TestimonialsSection testimonials={testimonials} />
         <GallerySection items={gallery} />
+        <FinalCtaSection />
         <ContactSection contact={contact} />
       </main>
     );
@@ -240,7 +265,7 @@ export function HomePage() {
         <div className="hero-atmosphere" aria-hidden="true" />
         <div className="hero-content">
           <span className="eyebrow">Train <i>•</i> Build <i>•</i> Transform</span>
-          <h1 id="hero-heading">{hero.heading}</h1>
+          <h1 id="hero-heading"><HeroHeading heading={hero.heading} /></h1>
           <p className="hero-description">{hero.description}</p>
           <div className="hero-actions">
             <a className="hero-button hero-button-primary" href={hero.primaryButtonLink}>
@@ -250,15 +275,14 @@ export function HomePage() {
               <span className="play-icon">▶</span> {hero.secondaryButtonText}
             </a>
           </div>
-          <div className="hero-meta">
-            <span>01</span>
-            <span>Strength / Performance / Community</span>
+          <div className="hero-features" aria-label="Gym features">
+            <div><span className="hero-feature-icon">◈</span><span><strong>Expert trainers</strong><small>Guidance you can trust</small></span></div>
+            <div><span className="hero-feature-icon">⌁</span><span><strong>Modern equipment</strong><small>Train smarter</small></span></div>
+            <div><span className="hero-feature-icon">◎</span><span><strong>Real results</strong><small>Stronger every day</small></span></div>
           </div>
         </div>
         <div className="hero-visual">
-          <div className="hero-image-frame">
-            <img src={hero.imageUrl || heroFallbackImage} alt={hero.heading} />
-          </div>
+          <ImageFrame src={hero.imageUrl || heroFallbackImage} alt={hero.heading} className="hero-image-frame" imageClassName="image--hero" />
           <span className="hero-vertical-label">EST. 2024 — YOUR BEST SELF</span>
           <span className="hero-cross hero-cross-one">×</span>
           <span className="hero-cross hero-cross-two">×</span>
@@ -271,32 +295,67 @@ export function HomePage() {
         <div className="hero-scroll"><span>Scroll</span><i /></div>
       </section>
       <AboutSection about={about} />
+      <GoalSection selectedGoal={selectedGoal} onSelect={setSelectedGoal} />
+      <WhyStaySection />
       <ServicesSection services={services} />
       <TrainersSection trainers={trainers} />
+      <SpotlightSection spotlight={spotlight} />
+      <TransformationWall items={gallery} testimonials={testimonials} />
       <MembershipSection plans={plans} currency={currency} />
       <TestimonialsSection testimonials={testimonials} />
       <GallerySection items={gallery} />
+      <FinalCtaSection />
       <ContactSection contact={contact} />
     </main>
   );
 }
 
+const goals = [
+ { title: "BUILD MUSCLE", text: "Structured training and coaching to help you build real strength and confidence.", cta: "Explore strength training" },
+ { title: "LOSE FAT", text: "A consistent plan, expert support, and a stronger routine that lasts.", cta: "Start your transformation" },
+ { title: "GET FIT", text: "Move better, feel sharper, and make training part of your everyday life.", cta: "Find your starting point" },
+ { title: "BUILD STRENGTH", text: "Progressive training for people ready to lift heavier and perform better.", cta: "Train with purpose" },
+];
+
+function GoalSection({ selectedGoal, onSelect }: { selectedGoal: string; onSelect: (goal: string) => void }) {
+ const active = goals.find((goal) => goal.title === selectedGoal) || goals[0];
+ return <section className="goal-section" aria-labelledby="goal-heading"><div className="goal-copy"><span className="eyebrow">Your next move</span><h2 id="goal-heading">What's<br /><em>your goal?</em></h2><p key={active.title}>{active.text}</p><a className="goal-cta" href="/membership">{active.cta} <span>↗</span></a></div><div className="goal-options" role="tablist" aria-label="Training goals">{goals.map((goal, index) => <button className={`goal-option${selectedGoal === goal.title ? " is-active" : ""}`} key={goal.title} type="button" role="tab" aria-selected={selectedGoal === goal.title} onClick={() => onSelect(goal.title)}><span>0{index + 1}</span><strong>{goal.title}</strong><i>↗</i></button>)}</div></section>;
+}
+
+function WhyStaySection() {
+ return <section className="why-stay-section" aria-labelledby="why-stay-heading"><div className="why-stay-intro"><span className="eyebrow">The difference</span><h2 id="why-stay-heading">Why people<br /><em>stay.</em></h2></div><div className="why-stay-list">{["REAL COACHING", "REAL PROGRESS", "REAL COMMUNITY", "REAL RESULTS"].map((point, index) => <div key={point}><span>0{index + 1}</span><strong>{point}</strong><i>↗</i></div>)}</div></section>;
+}
+
+function SpotlightSection({ spotlight }: { spotlight: MemberSpotlight | null }) {
+ const placeholder = !spotlight;
+ return <section className="spotlight-section" aria-labelledby="spotlight-heading"><div className="spotlight-image">{spotlight?.imageUrl ? <ImageFrame src={spotlight.imageUrl} alt={spotlight.memberName} className="spotlight-image-frame" imageClassName="image--portrait" /> : <div className="spotlight-placeholder"><span className="spotlight-placeholder-mark">+</span><strong>YOUR STORY<br />COULD BE NEXT</strong><small>Presentation-only spotlight</small></div>}</div><div className="spotlight-copy"><span className="eyebrow">Featured story</span><span className="spotlight-number">01</span><h2 id="spotlight-heading">{placeholder ? <>Member<br /><em>spotlight.</em></> : <>{spotlight.memberName}<br /><em>spotlight.</em></>}</h2><p className="spotlight-quote">“{spotlight?.quote || "Your strongest chapter starts with showing up."}”</p>{spotlight ? <><p>{spotlight.story}</p><div className="spotlight-stats"><span><strong>{spotlight.durationText || "—"}</strong> DURATION</span><span><strong>{spotlight.achievementText || "—"}</strong> ACHIEVEMENT</span></div></> : <div className="spotlight-stats"><span><strong>—</strong> MONTHS</span><span><strong>—</strong> DAYS / WEEK</span><span><strong>—</strong> YOUR ROUTINE</span></div>}<small className="editable-note">{placeholder ? "Presentation-only placeholder — connect this block to approved member transformation data later." : "Published member spotlight"}</small></div></section>;
+}
+
+function TransformationWall({ items, testimonials }: { items: GalleryItem[]; testimonials: TestimonialContent[] }) {
+ const images = items.filter((item) => item.imageUrl).slice(0, 4);
+ return <section className="transformation-section" aria-labelledby="transformation-heading"><div className="transformation-heading"><span className="eyebrow">The wall</span><h2 id="transformation-heading">Real people.<br /><em>Real results.</em></h2><p>{testimonials[0]?.review || "Progress looks different for everyone. The work is what connects us."}</p></div><div className="transformation-grid">{images.length ? images.map((item, index) => <figure className={`transformation-tile transformation-tile-${index}`} key={item.id}><ImageFrame src={item.imageUrl} alt={item.title} imageClassName="image--cover" /><figcaption>{item.category || "Gym moment"} <span>↗</span></figcaption></figure>) : <div className="transformation-empty">Transformation stories will appear here as they are added.</div>}</div></section>;
+}
+
+function FinalCtaSection() {
+ return <section className="final-cta-section" aria-labelledby="final-cta-heading"><span className="eyebrow">Your next chapter</span><h2 id="final-cta-heading">Ready to change?<br /><em>Your strongest self<br />starts here.</em></h2><a className="hero-button hero-button-primary" href="/membership">Join now <span>↗</span></a></section>;
+}
+
 function AboutSection({ about }: { about: AboutContent | null }) {
   return <section className="about-section" aria-labelledby="about-heading">
-    {about ? <><div className="about-visual">{about.imageUrl ? <img src={about.imageUrl} alt={about.title} loading="lazy" /> : <div className="about-image-placeholder" />}<span className="about-line" /></div><div className="about-copy"><span className="eyebrow">{about.subtitle}</span><h2 id="about-heading">{about.title}</h2><p>{about.description}</p><div className="about-stats"><div><strong>{about.experienceYears}<small>+</small></strong><span>Years Experience</span></div><div><strong>{about.membersCount}<small>+</small></strong><span>Happy Members</span></div><div><strong>{about.trainersCount}<small>+</small></strong><span>Expert Trainers</span></div></div></div></> : <p className="about-empty">Our story is coming soon.</p>}
+    {about ? <><div className="about-visual">{about.imageUrl ? <ImageFrame src={about.imageUrl} alt={about.title} className="about-image" /> : <div className="about-image-placeholder" />}<span className="about-line" /></div><div className="about-copy"><span className="eyebrow">{about.subtitle}</span><h2 id="about-heading">{about.title}</h2><p>{about.description}</p><div className="about-stats"><div><strong>{about.experienceYears}<small>+</small></strong><span>Years Experience</span></div><div><strong>{about.membersCount}<small>+</small></strong><span>Happy Members</span></div><div><strong>{about.trainersCount}<small>+</small></strong><span>Expert Trainers</span></div></div></div></> : <p className="about-empty">Our story is coming soon.</p>}
   </section>;
 }
 
 function ServicesSection({ services }: { services: ServiceContent[] }) {
   return (
-    <section className="services-section" aria-labelledby="services-heading">
+    <section className="services-section" id="services" aria-labelledby="services-heading">
       <div className="services-heading">
         <div><span className="eyebrow">What we offer</span><h2 id="services-heading">Train with purpose.</h2></div>
         <p>Focused programs designed to make you stronger, fitter, and more confident.</p>
       </div>
       {services.length ? <div className="services-grid">{services.map((service) => (
         <article className="service-card" key={service.id}>
-          {service.imageUrl ? <div className="service-image"><img src={service.imageUrl} alt={service.name} /></div> : <div className="service-image service-image-empty">{service.icon || "＋"}</div>}
+          {service.imageUrl ? <div className="service-image"><ImageFrame src={service.imageUrl} alt={service.name} imageClassName="image--contain" /></div> : <div className="service-image service-image-empty">{service.icon || "＋"}</div>}
           <div className="service-card-content"><span className="service-index">{String(service.displayOrder).padStart(2, "0")}</span><h3>{service.name}</h3><p>{service.shortDescription}</p>{service.description ? <small>{service.description}</small> : null}</div>
         </article>
       ))}</div> : <p className="services-empty">Our training programs are coming soon.</p>}
@@ -313,7 +372,7 @@ function TrainersSection({ trainers }: { trainers: TrainerContent[] }) {
       </div>
       {trainers.length ? <div className="trainers-grid">{trainers.map((trainer) => (
         <article className="trainer-card" key={trainer.id}>
-          {trainer.imageUrl ? <div className="trainer-image"><img src={trainer.imageUrl} alt={trainer.name} /></div> : <div className="trainer-image trainer-image-empty">G</div>}
+          {trainer.imageUrl ? <div className="trainer-image"><ImageFrame src={trainer.imageUrl} alt={trainer.name} imageClassName="image--portrait" /></div> : <div className="trainer-image trainer-image-empty">G</div>}
           <div className="trainer-card-content">
             <span className="trainer-role">{trainer.role}</span>
             <h3>{trainer.name}</h3>
@@ -332,7 +391,7 @@ function TrainersSection({ trainers }: { trainers: TrainerContent[] }) {
 }
 
 function MembershipSection({ plans, currency }: { plans: MembershipPlan[]; currency: string }) {
-  return <section className="membership-section" aria-labelledby="membership-heading">
+  return <section className="membership-section" id="membership" aria-labelledby="membership-heading">
     <div className="membership-heading"><div><span className="eyebrow">Membership</span><h2 id="membership-heading">Choose your<br />commitment.</h2></div><p>Simple plans designed to keep you consistent and moving forward.</p></div>
     {plans.length ? <div className="membership-grid">{plans.map((plan) => <article className={`membership-card${plan.isPopular ? " popular" : ""}`} key={plan.id}>{plan.isPopular ? <span className="popular-badge">Most popular</span> : null}<span className="membership-index">{String(plan.displayOrder).padStart(2, "0")}</span><h3>{plan.name}</h3><p>{plan.shortDescription}</p><strong className="membership-price">{currency} {plan.price.toLocaleString("en-IN")}<small> / {plan.durationMonths} {plan.durationMonths === 1 ? "month" : "months"}</small></strong><ul>{plan.features.split(/\r?\n/).map((feature) => feature.trim()).filter(Boolean).map((feature) => <li key={feature}>{feature}</li>)}</ul><a className="membership-cta" href="/membership">Get started <span>↗</span></a></article>)}</div> : <p className="membership-empty">Membership plans are coming soon.</p>}
   </section>;
@@ -342,7 +401,7 @@ function TestimonialsSection({ testimonials }: { testimonials: TestimonialConten
   return <section className="testimonials-section" aria-labelledby="testimonials-heading">
     <div className="testimonials-heading"><div><span className="eyebrow">Real results</span><h2 id="testimonials-heading">What our members say.</h2></div><p>Consistency feels better when you have the right people beside you.</p></div>
     {testimonials.length ? <div className="testimonials-grid">{testimonials.map((item) => <article className="testimonial-card" key={item.id}>
-      {item.imageUrl ? <img className="testimonial-avatar" src={item.imageUrl} alt={item.customerName} /> : <div className="testimonial-avatar testimonial-avatar-empty">{item.customerName.charAt(0).toUpperCase()}</div>}
+      {item.imageUrl ? <ImageFrame src={item.imageUrl} alt={item.customerName} className="testimonial-avatar" imageClassName="image--portrait" /> : <div className="testimonial-avatar testimonial-avatar-empty">{item.customerName.charAt(0).toUpperCase()}</div>}
       <div className="testimonial-stars" aria-label={`${item.rating} out of 5 stars`}>{"★".repeat(item.rating)}<span>{"★".repeat(5 - item.rating)}</span></div>
       <blockquote>“{item.review}”</blockquote>
       <footer><strong>{item.customerName}</strong>{item.roleOrDescription ? <small>{item.roleOrDescription}</small> : null}</footer>
@@ -357,7 +416,7 @@ function GallerySection({ items }: { items: GalleryItem[] }) {
       <p>A closer look at the spaces, sessions, and details that make every training day count.</p>
     </div>
     {items.length ? <div className="gallery-grid">{items.map((item, index) => <article className={`gallery-card gallery-card-${index % 5}`} key={item.id}>
-      <img src={item.imageUrl} alt={item.title} />
+      <ImageFrame src={item.imageUrl} alt={item.title} imageClassName="image--cover" />
       <div className="gallery-card-overlay"><span>{item.category || "Gym"}</span><h3>{item.title}</h3>{item.description ? <p>{item.description}</p> : null}</div>
     </article>)}</div> : <p className="gallery-empty">Our gallery is coming soon.</p>}
   </section>;

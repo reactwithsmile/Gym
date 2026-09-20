@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ImageFrame } from "../../components/ImageFrame";
 
 type ServiceContent = {
   id: number;
@@ -53,7 +54,7 @@ export function ServicesPage() {
             {services.map((service) => (
               <article className="service-card" key={service.id}>
                 {service.imageUrl ? (
-                  <div className="service-image"><img src={service.imageUrl} alt={service.name} /></div>
+                  <div className="service-image"><ImageFrame src={service.imageUrl} alt={service.name} imageClassName="image--contain" /></div>
                 ) : (
                   <div className="service-image service-image-empty">{service.icon || "＋"}</div>
                 )}
