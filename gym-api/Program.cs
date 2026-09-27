@@ -88,12 +88,54 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    if (builder.Configuration.GetValue<bool>("Database:AutoMigrate"))
+    var initialAdminProvisioningEnabled =
+        builder.Configuration.GetValue<bool>("InitialAdminProvisioning:Enabled");
+    var broadSeedingEnabled = builder.Configuration.GetValue<bool>("Seed:Enabled");
+    var autoMigrateEnabled = builder.Configuration.GetValue<bool>("Database:AutoMigrate");
+
+    if (initialAdminProvisioningEnabled && !app.Environment.IsProduction())
+    {
+        throw new InvalidOperationException(
+            "Initial admin provisioning can only run when ASPNETCORE_ENVIRONMENT is Production.");
+    }
+
+    if (initialAdminProvisioningEnabled && autoMigrateEnabled)
+    {
+        throw new InvalidOperationException(
+            "Database:AutoMigrate must be false when initial admin provisioning is enabled.");
+    }
+
+    if (app.Environment.IsProduction() && broadSeedingEnabled)
+    {
+        throw new InvalidOperationException(
+            "Seed:Enabled must remain false in Production. Use the one-time initial admin provisioning flag instead.");
+    }
+
+    if (initialAdminProvisioningEnabled && broadSeedingEnabled)
+    {
+        throw new InvalidOperationException(
+            "Initial admin provisioning and broad database seeding cannot run together.");
+    }
+
+    if (autoMigrateEnabled)
     {
         await db.Database.MigrateAsync();
     }
 
-    if (builder.Configuration.GetValue<bool>("Seed:Enabled"))
+    if (initialAdminProvisioningEnabled)
+    {
+        var passwordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher<User>>();
+        var logger = scope.ServiceProvider
+            .GetRequiredService<ILoggerFactory>()
+            .CreateLogger("InitialAdminProvisioning");
+        await InitialAdminProvisioner.ProvisionAsync(
+            db,
+            passwordHasher,
+            builder.Configuration,
+            logger);
+    }
+
+    if (broadSeedingEnabled)
     {
         await DbSeeder.SeedAsync(scope.ServiceProvider);
     }
