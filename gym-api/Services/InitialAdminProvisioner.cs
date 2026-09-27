@@ -15,6 +15,8 @@ public static class InitialAdminProvisioner
         ILogger logger,
         CancellationToken cancellationToken = default)
     {
+        logger.LogInformation("Initial admin provisioning enabled.");
+
         var email = configuration["InitialAdminProvisioning:Email"]?.Trim();
         if (string.IsNullOrWhiteSpace(email))
         {
@@ -22,11 +24,21 @@ public static class InitialAdminProvisioner
                 "InitialAdminProvisioning:Email must be configured when initial admin provisioning is enabled.");
         }
 
+        var password = configuration["InitialAdminProvisioning:Password"];
+        if (string.IsNullOrEmpty(password))
+        {
+            throw new InvalidOperationException(
+                "InitialAdminProvisioning:Password must be configured when initial admin provisioning is enabled.");
+        }
+
+        var normalizedEmail = email.ToUpperInvariant();
         await using var transaction = await db.Database.BeginTransactionAsync(cancellationToken);
 
         var existingUser = await db.Users
             .Include(user => user.Role)
-            .FirstOrDefaultAsync(user => user.Email == email, cancellationToken);
+            .FirstOrDefaultAsync(
+                user => user.Email.ToUpper() == normalizedEmail,
+                cancellationToken);
 
         if (existingUser is not null)
         {
@@ -36,17 +48,14 @@ public static class InitialAdminProvisioner
                     "A user with the configured initial admin email already exists and is not an Admin. No user was changed.");
             }
 
-            logger.LogInformation(
-                "Initial admin provisioning skipped because the configured Admin user already exists. No user was changed.");
+            existingUser.IsActive = true;
+            existingUser.PasswordHash = passwordHasher.HashPassword(existingUser, password);
+            existingUser.UpdatedAt = DateTime.UtcNow;
+            await db.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
-            return;
-        }
 
-        var password = configuration["InitialAdminProvisioning:Password"];
-        if (string.IsNullOrEmpty(password))
-        {
-            throw new InvalidOperationException(
-                "InitialAdminProvisioning:Password must be configured when creating the initial Admin user.");
+            logger.LogInformation("Existing admin user found; password reset performed.");
+            return;
         }
 
         var adminRole = await db.Roles
@@ -56,6 +65,11 @@ public static class InitialAdminProvisioner
             adminRole = new Role { Name = RoleNames.Admin };
             db.Roles.Add(adminRole);
             await db.SaveChangesAsync(cancellationToken);
+            logger.LogInformation("Admin role created.");
+        }
+        else
+        {
+            logger.LogInformation("Admin role found.");
         }
 
         var admin = new User
@@ -71,6 +85,6 @@ public static class InitialAdminProvisioner
         await db.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        logger.LogInformation("Initial Admin user provisioned successfully.");
+        logger.LogInformation("Initial admin user created.");
     }
 }
