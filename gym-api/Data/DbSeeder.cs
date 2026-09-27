@@ -157,7 +157,8 @@ public static class DbSeeder
         IConfiguration config,
         CancellationToken cancellationToken)
     {
-        var email = config["Seed:AdminEmail"] ?? "admin@gym.local";
+        var email = config["Seed:AdminEmail"]
+            ?? throw new InvalidOperationException("Seed:AdminEmail must be configured when seeding is enabled.");
         if (await db.Users.AnyAsync(u => u.Email == email, cancellationToken))
         {
             return;
@@ -171,7 +172,9 @@ public static class DbSeeder
             RoleId = adminRole.Id,
             IsActive = true
         };
-        user.PasswordHash = passwordHasher.HashPassword(user, config["Seed:AdminPassword"] ?? "Admin123!");
+        var password = config["Seed:AdminPassword"]
+            ?? throw new InvalidOperationException("Seed:AdminPassword must be configured when seeding is enabled.");
+        user.PasswordHash = passwordHasher.HashPassword(user, password);
         db.Users.Add(user);
         await db.SaveChangesAsync(cancellationToken);
     }
@@ -182,7 +185,8 @@ public static class DbSeeder
         IConfiguration config,
         CancellationToken cancellationToken)
     {
-        var email = config["Seed:TrainerEmail"] ?? "trainer@gym.local";
+        var email = config["Seed:TrainerEmail"]
+            ?? throw new InvalidOperationException("Seed:TrainerEmail must be configured when seeding is enabled.");
         if (await db.Users.AnyAsync(u => u.Email == email, cancellationToken))
         {
             return;
@@ -197,7 +201,9 @@ public static class DbSeeder
             IsActive = true
         };
 
-        user.PasswordHash = passwordHasher.HashPassword(user, config["Seed:TrainerPassword"] ?? "Trainer123!");
+        var password = config["Seed:TrainerPassword"]
+            ?? throw new InvalidOperationException("Seed:TrainerPassword must be configured when seeding is enabled.");
+        user.PasswordHash = passwordHasher.HashPassword(user, password);
 
         db.Users.Add(user);
         await db.SaveChangesAsync(cancellationToken);

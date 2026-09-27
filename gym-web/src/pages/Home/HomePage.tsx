@@ -1,4 +1,5 @@
 import { useEffect, useState, type CSSProperties } from "react";
+import { apiUrl } from "../../api/client";
 import heroFallbackImage from "../../assets/hero.png";
 import { ImageFrame } from "../../components/ImageFrame";
 
@@ -81,7 +82,6 @@ function HeroHeading({ heading }: { heading: string }) {
   return <>{heading}</>;
 }
 
-const apiUrl = import.meta.env.VITE_API_URL ?? "http://localhost:5182";
 
 export function HomePage() {
   const [hero, setHero] = useState<HeroContent | null>(null);
@@ -101,7 +101,7 @@ export function HomePage() {
   useEffect(() => {
     let isCurrent = true;
 
-    fetch(`${apiUrl}/api/hero`)
+    fetch(apiUrl("/api/hero"))
       .then(async (response) => {
         if (!response.ok) {
           throw new Error("Hero content unavailable");
@@ -132,21 +132,21 @@ export function HomePage() {
   }, []);
 
   useEffect(() => {
-    fetch(`${apiUrl}/api/member-spotlights`)
+    fetch(apiUrl("/api/member-spotlights"))
       .then(async (response) => { if (!response.ok) throw new Error("Member spotlight unavailable"); return await response.json() as MemberSpotlight | null; })
       .then(setSpotlight)
       .catch(() => setSpotlight(null));
   }, []);
 
   useEffect(() => {
-    fetch(`${apiUrl}/api/gym-settings`)
+    fetch(apiUrl("/api/gym-settings"))
       .then(async (response) => { if (!response.ok) throw new Error("Gym settings unavailable"); return await response.json() as GymSettings; })
       .then((settings) => setCurrency(settings.currency || "INR"))
       .catch(() => undefined);
   }, []);
 
   useEffect(() => {
-    fetch(`${apiUrl}/api/contact`)
+    fetch(apiUrl("/api/contact"))
       .then(async (response) => {
         if (!response.ok) throw new Error("Contact unavailable");
         return (await response.json()) as ContactContent;
@@ -156,7 +156,7 @@ export function HomePage() {
   }, []);
 
   useEffect(() => {
-    fetch(`${apiUrl}/api/testimonials`)
+    fetch(apiUrl("/api/testimonials"))
       .then(async (response) => {
         if (!response.ok) throw new Error("Testimonials unavailable");
         return (await response.json()) as TestimonialContent[];
@@ -166,7 +166,7 @@ export function HomePage() {
   }, []);
 
   useEffect(() => {
-    fetch(`${apiUrl}/api/gallery`)
+    fetch(apiUrl("/api/gallery"))
       .then(async (response) => {
         if (!response.ok) throw new Error("Gallery unavailable");
         return (await response.json()) as GalleryItem[];
@@ -176,7 +176,7 @@ export function HomePage() {
   }, []);
 
   useEffect(() => {
-    fetch(`${apiUrl}/api/membership-plans`)
+    fetch(apiUrl("/api/membership-plans"))
       .then(async (response) => {
         if (!response.ok) throw new Error("Membership plans unavailable");
         return (await response.json()) as MembershipPlan[];
@@ -186,7 +186,7 @@ export function HomePage() {
   }, []);
 
   useEffect(() => {
-    fetch(`${apiUrl}/api/trainers`)
+    fetch(apiUrl("/api/trainers"))
       .then(async (response) => {
         if (!response.ok) throw new Error("Trainers unavailable");
         return (await response.json()) as TrainerContent[];
@@ -196,7 +196,7 @@ export function HomePage() {
   }, []);
 
   useEffect(() => {
-    fetch(`${apiUrl}/api/services`)
+    fetch(apiUrl("/api/services"))
       .then(async (response) => {
         if (!response.ok) throw new Error("Services unavailable");
         return (await response.json()) as ServiceContent[];
@@ -206,7 +206,7 @@ export function HomePage() {
   }, []);
 
   useEffect(() => {
-    fetch(`${apiUrl}/api/about`)
+    fetch(apiUrl("/api/about"))
       .then(async (response) => {
         if (!response.ok) throw new Error("About content unavailable");
         return (await response.json()) as AboutContent;

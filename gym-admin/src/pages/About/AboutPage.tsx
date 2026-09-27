@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { apiFetch } from "../../api/client";
+import { apiFetch, apiUrl } from "../../api/client";
 import { useAuth } from "../../auth/AuthContext";
 import { Permission } from "../../types/auth";
 
@@ -36,7 +36,7 @@ export function AboutPage() {
     }
     void (async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL ?? "http://localhost:5182"}/api/about`);
+        const response = await fetch(apiUrl("/api/about"));
         if (response.status === 404) return;
         if (!response.ok) throw new Error("Unable to load About content.");
         const data = await response.json() as AboutRecord;

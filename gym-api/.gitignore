@@ -43,3 +43,5 @@ appsettings.Local.json
 Thumbs.db
 *.swp
 *.swo
+.neon
+node_modules/

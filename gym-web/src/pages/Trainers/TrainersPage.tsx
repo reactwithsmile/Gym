@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
+import { apiUrl } from "../../api/client";
 import { ImageFrame } from "../../components/ImageFrame";
 
 type Trainer = { id: number; name: string; role: string; bio: string; imageUrl: string; specialization: string; experienceYears: number; instagramUrl: string; facebookUrl: string; displayOrder: number };
-const apiUrl = import.meta.env.VITE_API_URL ?? "http://localhost:5182";
-
 export function TrainersPage() {
   const [trainers, setTrainers] = useState<Trainer[]>([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     let current = true;
-    fetch(`${apiUrl}/api/trainers`).then(async (response) => {
+    fetch(apiUrl("/api/trainers")).then(async (response) => {
       if (!response.ok) throw new Error();
       return await response.json() as Trainer[];
     }).then((data) => { if (current) setTrainers(data); }).catch(() => { if (current) setTrainers([]); }).finally(() => { if (current) setLoading(false); });

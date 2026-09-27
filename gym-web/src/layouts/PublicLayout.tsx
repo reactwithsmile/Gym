@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
+import { apiUrl } from "../api/client";
 
 type GymSettings = { gymName: string; logoUrl: string; tagline: string; websiteUrl: string; currency: string };
 
@@ -28,7 +29,7 @@ export function PublicLayout() {
   }, []);
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL ?? "http://localhost:5182"}/api/gym-settings`)
+    fetch(apiUrl("/api/gym-settings"))
       .then(async (response) => {
         if (!response.ok) throw new Error("Gym settings unavailable");
         return await response.json() as GymSettings;

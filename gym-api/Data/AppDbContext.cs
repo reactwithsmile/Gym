@@ -61,7 +61,6 @@ public class AppDbContext : DbContext
             entity.Property(product => product.Name).HasMaxLength(200).IsRequired();
             entity.Property(product => product.Category).HasMaxLength(100).IsRequired();
             entity.Property(product => product.Description).HasMaxLength(2000);
-            entity.Property(product => product.ImageUrl).HasColumnType("nvarchar(max)");
             entity.Property(product => product.Price).HasPrecision(18, 2);
             entity.HasIndex(product => new { product.IsActive, product.DisplayOrder });
         });
@@ -98,9 +97,9 @@ public class AppDbContext : DbContext
             entity.Property(h => h.PrimaryButtonLink).HasMaxLength(500);
             entity.Property(h => h.SecondaryButtonText).HasMaxLength(100);
             entity.Property(h => h.SecondaryButtonLink).HasMaxLength(500);
-            entity.Property(h => h.ImageUrl).HasColumnType("nvarchar(max)").IsRequired();
-            entity.Property(h => h.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
-            entity.Property(h => h.UpdatedAt).HasDefaultValueSql("GETUTCDATE()");
+            entity.Property(h => h.ImageUrl).IsRequired();
+            entity.Property(h => h.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            entity.Property(h => h.UpdatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
             entity.HasIndex(h => h.IsActive);
         });
 
@@ -109,7 +108,6 @@ public class AppDbContext : DbContext
             entity.Property(a => a.Title).HasMaxLength(200).IsRequired();
             entity.Property(a => a.Subtitle).HasMaxLength(300);
             entity.Property(a => a.Description).HasMaxLength(2000).IsRequired();
-            entity.Property(a => a.ImageUrl).HasColumnType("nvarchar(max)");
             entity.HasIndex(a => a.IsActive);
         });
 
@@ -118,7 +116,6 @@ public class AppDbContext : DbContext
             entity.Property(service => service.Name).HasMaxLength(200).IsRequired();
             entity.Property(service => service.ShortDescription).HasMaxLength(500).IsRequired();
             entity.Property(service => service.Description).HasMaxLength(2000);
-            entity.Property(service => service.ImageUrl).HasColumnType("nvarchar(max)");
             entity.Property(service => service.Icon).HasMaxLength(100);
             entity.HasIndex(service => new { service.IsActive, service.DisplayOrder });
         });
@@ -128,7 +125,6 @@ public class AppDbContext : DbContext
             entity.Property(trainer => trainer.Name).HasMaxLength(200).IsRequired();
             entity.Property(trainer => trainer.Role).HasMaxLength(200).IsRequired();
             entity.Property(trainer => trainer.Bio).HasMaxLength(2000);
-            entity.Property(trainer => trainer.ImageUrl).HasColumnType("nvarchar(max)");
             entity.Property(trainer => trainer.Specialization).HasMaxLength(300);
             entity.Property(trainer => trainer.InstagramUrl).HasMaxLength(500);
             entity.Property(trainer => trainer.FacebookUrl).HasMaxLength(500);
@@ -149,7 +145,7 @@ public class AppDbContext : DbContext
         {
             entity.Property(item => item.Title).HasMaxLength(200).IsRequired();
             entity.Property(item => item.Description).HasMaxLength(2000);
-            entity.Property(item => item.ImageUrl).HasColumnType("nvarchar(max)").IsRequired();
+            entity.Property(item => item.ImageUrl).IsRequired();
             entity.Property(item => item.Category).HasMaxLength(100);
             entity.HasIndex(item => new { item.IsActive, item.DisplayOrder });
         });
@@ -159,7 +155,6 @@ public class AppDbContext : DbContext
             entity.Property(item => item.CustomerName).HasMaxLength(200).IsRequired();
             entity.Property(item => item.RoleOrDescription).HasMaxLength(300);
             entity.Property(item => item.Review).HasMaxLength(2000).IsRequired();
-            entity.Property(item => item.ImageUrl).HasColumnType("nvarchar(max)");
             entity.HasIndex(item => new { item.IsActive, item.DisplayOrder });
         });
 
@@ -168,7 +163,6 @@ public class AppDbContext : DbContext
             entity.Property(item => item.MemberName).HasMaxLength(200).IsRequired();
             entity.Property(item => item.Quote).HasMaxLength(1000);
             entity.Property(item => item.Story).HasMaxLength(4000);
-            entity.Property(item => item.ImageUrl).HasColumnType("nvarchar(max)");
             entity.Property(item => item.DurationText).HasMaxLength(200);
             entity.Property(item => item.AchievementText).HasMaxLength(500);
             entity.HasIndex(item => new { item.IsActive, item.IsFeatured, item.DisplayOrder });
@@ -191,7 +185,6 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<GymSettings>(entity =>
         {
             entity.Property(item => item.GymName).HasMaxLength(200).IsRequired();
-            entity.Property(item => item.LogoUrl).HasColumnType("nvarchar(max)");
             entity.Property(item => item.Tagline).HasMaxLength(300);
             entity.Property(item => item.WebsiteUrl).HasMaxLength(1000);
             entity.Property(item => item.Currency).HasMaxLength(10).IsRequired();
@@ -235,7 +228,7 @@ public class AppDbContext : DbContext
             entity.Property(x => x.Message).HasMaxLength(2000).IsRequired();
             entity.Property(x => x.Type).HasMaxLength(50).IsRequired();
             entity.Property(x => x.DeduplicationKey).HasMaxLength(300);
-            entity.HasIndex(x => x.DeduplicationKey).IsUnique().HasFilter("[DeduplicationKey] IS NOT NULL");
+            entity.HasIndex(x => x.DeduplicationKey).IsUnique().HasFilter("\"DeduplicationKey\" IS NOT NULL");
         });
     }
 }

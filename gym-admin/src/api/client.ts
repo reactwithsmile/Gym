@@ -1,7 +1,10 @@
-﻿const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:44357";
+const API_URL = import.meta.env.VITE_API_URL;
 const TOKEN_KEY = "gym_admin_token";
 
 export function apiUrl(path: string): string {
+  if (!API_URL) {
+    throw new Error("VITE_API_URL is not configured.");
+  }
   return `${API_URL}${path}`;
 }
 

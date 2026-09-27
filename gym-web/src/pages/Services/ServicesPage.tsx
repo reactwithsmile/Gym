@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { apiUrl } from "../../api/client";
 import { ImageFrame } from "../../components/ImageFrame";
 
 type ServiceContent = {
@@ -11,15 +12,13 @@ type ServiceContent = {
   displayOrder: number;
 };
 
-const apiUrl = import.meta.env.VITE_API_URL ?? "http://localhost:5182";
-
 export function ServicesPage() {
   const [services, setServices] = useState<ServiceContent[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let isCurrent = true;
-    fetch(`${apiUrl}/api/services`)
+    fetch(apiUrl("/api/services"))
       .then(async (response) => {
         if (!response.ok) throw new Error("Services unavailable");
         return (await response.json()) as ServiceContent[];

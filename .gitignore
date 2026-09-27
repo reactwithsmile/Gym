@@ -2,6 +2,15 @@
 **/obj/
 **/node_modules/
 **/dist/
+**/.build/
+**/publish/
 .vs/
 *.user
+*.userosscache
+*.suo
+.env
+.env.*
+!.env.example
+secrets
+secrets.json
 .env.local

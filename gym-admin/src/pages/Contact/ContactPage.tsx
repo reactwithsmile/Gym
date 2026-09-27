@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { apiFetch } from "../../api/client";
+import { apiFetch, apiUrl } from "../../api/client";
 import { useAuth } from "../../auth/AuthContext";
 import { Permission } from "../../types/auth";
 
@@ -14,7 +14,7 @@ export function ContactPage() {
   const [loading, setLoading] = useState(true); const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const canView = hasPermission(Permission.ContactView); const canEdit = hasPermission(Permission.ContactEdit);
-  useEffect(() => { if (!canView) { setLoading(false); return; } void (async () => { try { const response = await fetch(`${import.meta.env.VITE_API_URL ?? "http://localhost:5182"}/api/contact`); if (response.status === 404) return; if (!response.ok) throw new Error("Unable to load contact information."); const data = await response.json() as Contact; setRecordId(data.id); setForm(data); } catch (error) { setMessage({ type: "error", text: error instanceof Error ? error.message : "Unable to load contact information." }); } finally { setLoading(false); } })(); }, [canView]);
+  useEffect(() => { if (!canView) { setLoading(false); return; } void (async () => { try { const response = await fetch(apiUrl("/api/contact")); if (response.status === 404) return; if (!response.ok) throw new Error("Unable to load contact information."); const data = await response.json() as Contact; setRecordId(data.id); setForm(data); } catch (error) { setMessage({ type: "error", text: error instanceof Error ? error.message : "Unable to load contact information." }); } finally { setLoading(false); } })(); }, [canView]);
   function update<K extends keyof ContactForm>(key: K, value: ContactForm[K]) { setForm((current) => ({ ...current, [key]: value })); }
   async function save() { if (!form.gymName.trim()) { setMessage({ type: "error", text: "Gym name is required." }); return; } if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) { setMessage({ type: "error", text: "Enter a valid email address." }); return; } if (!canEdit) { setMessage({ type: "error", text: "You do not have permission to edit contact information." }); return; } setSaving(true); try { const result = await apiFetch<Contact>(recordId ? `/api/contact/${recordId}` : "/api/contact", { method: recordId ? "PUT" : "POST", body: JSON.stringify(form) }); setRecordId(result.id); setForm(result); setMessage({ type: "success", text: "Contact information saved successfully." }); } catch (error) { setMessage({ type: "error", text: error instanceof Error ? error.message : "Unable to save contact information." }); } finally { setSaving(false); } }
   if (!canView) return <main className="page"><h1>Contact</h1><p>You do not have permission to view this page.</p></main>;

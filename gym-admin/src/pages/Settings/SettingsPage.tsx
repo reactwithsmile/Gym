@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { apiFetch } from "../../api/client";
+import { apiFetch, apiUrl } from "../../api/client";
 import { useAuth } from "../../auth/AuthContext";
 import { Permission } from "../../types/auth";
 
@@ -13,7 +13,7 @@ export function SettingsPage() {
   const [loading, setLoading] = useState(true); const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const canView = hasPermission(Permission.SettingsView); const canEdit = hasPermission(Permission.SettingsEdit);
-  useEffect(() => { if (!canView) { setLoading(false); return; } void (async () => { try { const response = await fetch(`${import.meta.env.VITE_API_URL ?? "http://localhost:5182"}/api/gym-settings`); if (response.status === 404) return; if (!response.ok) throw new Error("Unable to load gym settings."); const data = await response.json() as Settings; setId(data.id); setForm({ gymName: data.gymName, logoUrl: data.logoUrl, tagline: data.tagline, websiteUrl: data.websiteUrl, currency: data.currency }); } catch (error) { setMessage({ type: "error", text: error instanceof Error ? error.message : "Unable to load gym settings." }); } finally { setLoading(false); } })(); }, [canView]);
+  useEffect(() => { if (!canView) { setLoading(false); return; } void (async () => { try { const response = await fetch(apiUrl("/api/gym-settings")); if (response.status === 404) return; if (!response.ok) throw new Error("Unable to load gym settings."); const data = await response.json() as Settings; setId(data.id); setForm({ gymName: data.gymName, logoUrl: data.logoUrl, tagline: data.tagline, websiteUrl: data.websiteUrl, currency: data.currency }); } catch (error) { setMessage({ type: "error", text: error instanceof Error ? error.message : "Unable to load gym settings." }); } finally { setLoading(false); } })(); }, [canView]);
   function update<K extends keyof Form>(key: K, value: Form[K]) { setForm((current) => ({ ...current, [key]: value })); }
   function handleLogoUpload(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];

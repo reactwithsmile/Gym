@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { apiUrl } from "../../api/client";
 
 type AboutContent = {
   title: string;
@@ -11,14 +12,12 @@ type AboutContent = {
   isActive: boolean;
 };
 
-const apiUrl = import.meta.env.VITE_API_URL ?? "https://localhost:44357";
-
 export function AboutPage() {
   const [about, setAbout] = useState<AboutContent | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${apiUrl}/api/about`)
+    fetch(apiUrl("/api/about"))
       .then(async (response) => {
         if (!response.ok) {
           throw new Error("About content unavailable");
